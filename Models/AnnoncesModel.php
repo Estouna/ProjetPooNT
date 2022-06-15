@@ -1,6 +1,5 @@
 <?php
 
-// Comme cette classe est déjà dans le namespace App\Models; pas besoin de faire un use
 namespace App\Models;
 
 class AnnoncesModel extends Model
@@ -24,7 +23,6 @@ class AnnoncesModel extends Model
     /* 
         -------------------------------------------------------- GETTERS/SETTERS --------------------------------------------------------
     */
-
     /**
      * Get the value of id
      */

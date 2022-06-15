@@ -20,26 +20,32 @@ class Model extends Db
     /* 
        ////////////////////////////////////////  READ  //////////////////////////////////////// 
     */
-    // Récupère tout les données d'une table
+    // Récupère toutes les données d'une table
     public function findAll()
     {
         $query = $this->requete('SELECT * FROM ' . $this->table);
         return $query->fetchAll();
     }
 
-    // Récupère les données d'une table par critères (par ex : annonces avec le champ "actif = 1" qui est associé à une valeur )
+    // Récupère les données d'une table par critères (par ex : "$annonces = $model->findBy([‘actif’ => 1]) ;")
     public function findBy(array $criteres)
     {
+        // Tableaux vides pour les champs et les valeurs
         $champs = [];
         $valeurs = [];
 
+        // On boucle pour éclater le tableau $criteres en deux tableaux
         foreach ($criteres as $champ => $valeur) {
+
+            // On push dans les tableaux $champs et $valeurs ($valeur pour le ? de "$champ = ?")
             $champs[] = "$champ = ?";
             $valeurs[] = $valeur;
         }
 
+        // Transforme le tableau $champs et ses champs séparées en une chaîne de caractères qui rassemble les champs sur une seule ligne.
         $liste_champs = implode(' AND ', $champs);
 
+        // On exécute la requête
         return $this->requete("SELECT * FROM {$this->table} WHERE $liste_champs", $valeurs)->fetchAll();
     }
 
