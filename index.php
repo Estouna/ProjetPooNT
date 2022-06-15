@@ -1,12 +1,12 @@
 <?php
 
-// Utilise les chemins (Rappel: App = dossier class)
+
 use App\Autoloader;
 use App\Models\AnnoncesModel;
 use App\Models\UsersModel;
 
 require_once 'Autoloader.php';
-// Fonction static qui s'appelle directement, pas d'instanciation à faire pour l'autoloader
+
 Autoloader::register();
 
 // ________________________________________________________________________________________________________________________________________
