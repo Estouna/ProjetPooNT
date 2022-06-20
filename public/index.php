@@ -1,6 +1,7 @@
 <?php
 
 use App\Autoloader;
+use App\Core\Main;
 
 // Défini une constante contenant le dossier racine du projet
 define('ROOT', dirname(__DIR__));
@@ -9,4 +10,8 @@ define('ROOT', dirname(__DIR__));
 require_once ROOT.'/Autoloader.php';
 Autoloader::register();
 
-echo "Bonjour";
+// On instancie Maintenant
+$app = new Main();
+
+// On démarre l'application
+$app->start();
