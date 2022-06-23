@@ -21,8 +21,8 @@ class Main
             http_response_code(301);
 
             // Redirige vers l'URL sans /
-            header('Location: '.$uri);
-            exit;
+            //header('Location: ' .$uri);
+            //exit;
        }
 
        // Sépare les paramètres dans un tableau
