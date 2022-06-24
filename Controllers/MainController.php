@@ -1,10 +1,10 @@
 <?php
 namespace App\Controllers;
 
-class MainController
+class MainController extends Controller
 {
    public function index()
    {
-        echo "Ceci est la page d'accueil";
+      include_once ROOT.'/Views/main/index.php';
    } 
 }
