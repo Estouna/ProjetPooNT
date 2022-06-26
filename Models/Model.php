@@ -4,6 +4,9 @@ namespace App\Models;
 
 use App\Core\Db;
 
+/**
+ * Modèle principal
+ */
 class Model extends Db
 {
     // Table de la base de données

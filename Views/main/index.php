@@ -1,1 +1,1 @@
-<p>Page d’accueil du site</p>
+<h1>Accueil</h1>
