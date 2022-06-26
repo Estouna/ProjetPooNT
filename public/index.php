@@ -1,4 +1,5 @@
 <?php
+
 use App\Autoloader;
 use App\Core\Main;
 
@@ -7,7 +8,7 @@ define('ROOT', dirname(__DIR__));
 
 
 // Import de l'autoloader
-require_once ROOT.'/Autoloader.php';
+require_once ROOT . '/Autoloader.php';
 Autoloader::register();
 
 
