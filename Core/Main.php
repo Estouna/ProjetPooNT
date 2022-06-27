@@ -24,8 +24,8 @@ class Main
             http_response_code(301);
 
             //Redirige vers l'URL sans /
-            //header('Location: ' .$uri);
-            //exit;
+            header('Location: ' .$uri);
+            exit;
         }
 
         // Sépare les paramètres dans un tableau
@@ -44,13 +44,17 @@ class Main
             $action = (isset($params[0])) ? array_shift($params) : 'index';
 
             if (method_exists($controller, $action)) {
-                // S'il reste des paramètres les passe à la méthode
-                (isset($params[0])) ? $controller->$action($params) : $controller->$action();
+
+                // S'il reste des paramètres on les passe à la méthode 
+                // call_user_func_array() permet d'envoyer une fonction (ici [$controller, $action]) et de passer en plus un tableau
+                (isset($params[0])) ? call_user_func_array([$controller, $action], $params) : $controller->$action();
             } else {
+
                 http_response_code(404);
                 echo "La page recherchée n'existe pas";
             }
         } else {
+
             // Controller par défaut
             $controller = new MainController;
             $controller->index();
