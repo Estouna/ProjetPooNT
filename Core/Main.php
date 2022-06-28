@@ -24,7 +24,7 @@ class Main
             http_response_code(301);
 
             //Redirige vers l'URL sans /
-            header('Location: ' .$uri);
+            header('Location: ' . $uri);
             exit;
         }
 
