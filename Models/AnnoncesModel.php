@@ -123,32 +123,3 @@ class AnnoncesModel extends Model
         return $this;
     }
 }
-
-
-/*
-    On crée d'abord le constructeur de la classe qui sera très simple
-        $this->table = 'annonces';
-        - On récupère table qu'on relie à annonces et c'est tout.
-        Maintenant qu'on a fait ça, on peut interroger la base de données et récupérer toute les annonces de cette façon :
-        En ajoutant dans le fichier index.php un use App\Models\AnnoncesModel; et en instanciant $model = new AnnoncesModel;
-
-    On ajoute les différents champs de la table annonces ($id, $titre, etc) et on crée leurs getters/setters 
-    (Rappel Getters/Setters parce qu'on est en protected (private pareil) et qu'on ne pas y accèder directement)
-
-    Les return $this dans les setters vont nous servir à créer les différentes informations directement en une fois depuis notre instance de Model.
-    Exemple:
-
-    - Si on veut créer ces différentes informations, on instancie de cette façon
-    $annonce = $model
-        ->setTitre('Nouvelle annonce')
-        ->setDescription('Nouvelle description')
-        ->setActif(0)
-        ->etc;
-    On peut enchaîner de cette manière parce que chaque Setters retourne l'objet (return $this), 
-    ce qui veut dire qu'on retourne l'objet systématiquemnt et qu'on va pouvoir l'utiliser de cette façon
-
-    - Si on veut créer une annonce il faudrait pourvoir faire
-    $model->create($annonce)
-    On va donc créer une méthode dans notre Model(Model.php)
-
-*/
