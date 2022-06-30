@@ -1,4 +1,4 @@
-<h1>Liste des annonces</h1>
+<h1 class="text-center my-5">Liste des annonces</h1>
 
 <?php foreach ($annonces as $annonce) : ?>
     <article>

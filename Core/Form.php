@@ -36,4 +36,31 @@ class Form
         // Sinon valide en retournant true
         return true;
     }
+
+    /**
+     * Ajoute les attributs envoyés à la balise
+     * @param array $attributs Tableau associatif ['class' => 'form-control', 'required' => true]
+     * @return string Chaine de caractères générée
+     */
+    private function ajoutAttributs(array $attributs): string
+    {
+        // Initialise une chaîne de caractères
+        $str = '';
+
+        // Liste les attributs "courts" (qui n'ont pas de valeurs)
+        $courts = ['checked', 'disabled', 'readonly', 'multiple', 'required', 'autofocus', 'novalidate', 'formnovalidate'];
+
+        // Parcourt le tableau d'attributs
+        foreach ($attributs as $attribut => $valeur) {
+            // Si l'attribut est dans le tableau $courts (in_array())
+            if (in_array($attribut, $courts) && $valeur == true) {
+                $str .= " $attribut";
+            } else {
+                // Ajoute attribut='valeur'
+                $str .= " $attribut='$valeur'";
+            }
+        }
+
+        return $str;
+    }
 }
