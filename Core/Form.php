@@ -15,7 +15,11 @@ class Form
         return $this->formCode;
     }
 
+    /* 
+        -------------------------------------------------------- VALIDATION --------------------------------------------------------
+    */
     // XXXX Validation simple à améliorer XXXX
+
     /**
      * Vérifie et valide si tous les champs sont remplis
      * @param array $form Tableau contenant les champs à vérifier
@@ -37,6 +41,9 @@ class Form
         return true;
     }
 
+    /* 
+        -------------------------------------------------------- AJOUT D'ATTRIBUTS --------------------------------------------------------
+    */
     /**
      * Ajoute les attributs envoyés à la balise
      * @param array $attributs Tableau associatif ['class' => 'form-control', 'required' => true]
@@ -62,5 +69,60 @@ class Form
         }
 
         return $str;
+    }
+
+    /* 
+        -------------------------------------------------------- BALISE <FORM> --------------------------------------------------------
+    */
+    /**
+     * Balise d'ouverture du formulaire
+     * @param string $methode method de la balise <form> (post ou get)
+     * @param string $action action de la balise <form>
+     * @param array $attributs Les attributs
+     * @return Form Retourne le formulaire
+     */
+    public function debutForm(string $methode = 'post', string $action = '#', array $attributs = []): self
+    {
+        // Création de la balise d'ouverture form
+        $this->formCode .= "<form method='$methode' action='$action'";
+
+        // Ajoute les attributs éventuels et ferme form
+        $this->formCode .= $attributs ? $this->ajoutAttributs($attributs) . '>' : '>';
+
+        return $this;
+    }
+
+    /**
+     * Balise de fermeture du formulaire
+     * @return Form 
+     */
+    public function finForm(): self
+    {
+        $this->formCode .= '</form>';
+        return $this;
+    }
+
+    /* 
+        -------------------------------------------------------- BALISE <LABEL> --------------------------------------------------------
+    */
+    /**
+     * Ajout d'un label
+     * @param string $for for de la balise label
+     * @param string $texte Intitulé de la balise label
+     * @param array $attributs Les attributs
+     * @return Form 
+     */
+    public function ajoutLabelFor(string $for, string $texte, array $attributs = []): self
+    {
+        // Ouvre la balise label
+        $this->formCode .= "<label for='$for'";
+
+        // Ajoute les attributs
+        $this->formCode .= $attributs ? $this->ajoutAttributs($attributs) : '';
+
+        // Ferme la balise ouvrante, ajoute l'intitulé du label et la balise fermante
+        $this->formCode .= ">$texte</label>";
+
+        return $this;
     }
 }

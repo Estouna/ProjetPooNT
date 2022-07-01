@@ -1,3 +1,6 @@
+<!-- 
+    -------------------------------------------------------- AFFICHAGE DE LA LISTE DES ANNONCES -------------------------------------------------------- 
+-->
 <h1 class="text-center my-5">Liste des annonces</h1>
 
 <?php foreach ($annonces as $annonce) : ?>

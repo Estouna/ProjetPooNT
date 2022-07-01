@@ -18,8 +18,6 @@ class Model extends Db
         -------------------------------------------------------- METHODES --------------------------------------------------------
     */
 
-
-
     /* 
        ////////////////////////////////////////  READ  //////////////////////////////////////// 
     */
@@ -57,11 +55,6 @@ class Model extends Db
     {
         return $this->requete("SELECT * FROM {$this->table} WHERE id = $id")->fetch();
     }
-    /* 
-        XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-    */
-
-
 
     /* 
        ////////////////////////////////////////  REQUETE  //////////////////////////////////////// 
@@ -83,11 +76,6 @@ class Model extends Db
             return $this->db->query($sql);
         }
     }
-    /* 
-        XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-    */
-
-
 
     /* 
         ////////////////////////////////////////  CREATE  //////////////////////////////////////// 
@@ -113,11 +101,6 @@ class Model extends Db
         // On execute la requête
         return $this->requete('INSERT INTO ' . $this->table . ' (' . $liste_champs . ')VALUES(' . $liste_interro . ')', $valeurs);
     }
-    /* 
-        XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-    */
-
-
 
     /* 
         ////////////////////////////////////////  UPDATE  //////////////////////////////////////// 
@@ -140,11 +123,6 @@ class Model extends Db
         // On execute la requête
         return $this->requete('UPDATE ' . $this->table . ' SET ' . $liste_champs . ' WHERE id = ?', $valeurs);
     }
-    /* 
-        XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-    */
-
-
 
     /* 
         ////////////////////////////////////////  DELETE  //////////////////////////////////////// 
@@ -153,11 +131,6 @@ class Model extends Db
     {
         return $this->requete("DELETE FROM {$this->table} WHERE id = ?", [$id]);
     }
-    /* 
-        XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-    */
-
-
 
     /* 
         ////////////////////////////////////////  HYDRATER  //////////////////////////////////////// 
@@ -176,7 +149,4 @@ class Model extends Db
         }
         return $this;
     }
-    /* 
-        XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-    */
 }
