@@ -1,3 +1,6 @@
+<!-- 
+    -------------------------------------------------------- FORMULAIRE DE CONNEXION -------------------------------------------------------- 
+-->
 <form action="#" method="post">
     <label for="email">E-mail :</label>
     <input type="email" name="email" id="email" class="form-control" required>

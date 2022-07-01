@@ -19,7 +19,6 @@ class AnnoncesModel extends Model
         $this->table = 'annonces';
     }
 
-
     /* 
         -------------------------------------------------------- GETTERS/SETTERS --------------------------------------------------------
     */
