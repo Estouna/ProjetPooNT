@@ -42,7 +42,7 @@ class Form
     }
 
     /* 
-        -------------------------------------------------------- AJOUT D'ATTRIBUTS --------------------------------------------------------
+        -------------------------------------------------------- AJOUT DES ATTRIBUTS --------------------------------------------------------
     */
     /**
      * Ajoute les attributs envoyés à la balise
@@ -72,28 +72,28 @@ class Form
     }
 
     /* 
-        -------------------------------------------------------- BALISE <FORM> --------------------------------------------------------
+        -------------------------------------------------------- BALISE FORM --------------------------------------------------------
     */
     /**
-     * Balise d'ouverture du formulaire
-     * @param string $methode method de la balise <form> (post ou get)
-     * @param string $action action de la balise <form>
+     * Ajoute une balise d'ouverture form
+     * @param string $methode method de la balise form (post ou get)
+     * @param string $action action de la balise form
      * @param array $attributs Les attributs
      * @return Form Retourne le formulaire
      */
     public function debutForm(string $methode = 'post', string $action = '#', array $attributs = []): self
     {
-        // Création de la balise d'ouverture form
+        // Ouvre la balise form
         $this->formCode .= "<form method='$methode' action='$action'";
 
-        // Ajoute les attributs éventuels et ferme form
+        // Ajout des attributs et ferme la balise d'ouverture si pas d'attributs ferme seulement la balise
         $this->formCode .= $attributs ? $this->ajoutAttributs($attributs) . '>' : '>';
 
         return $this;
     }
 
     /**
-     * Balise de fermeture du formulaire
+     * Ajoute une balise de fermeture form
      * @return Form 
      */
     public function finForm(): self
@@ -103,10 +103,10 @@ class Form
     }
 
     /* 
-        -------------------------------------------------------- BALISE <LABEL> --------------------------------------------------------
+        -------------------------------------------------------- BALISE LABEL --------------------------------------------------------
     */
     /**
-     * Ajout d'un label
+     * Ajoute une balise label
      * @param string $for for de la balise label
      * @param string $texte Intitulé de la balise label
      * @param array $attributs Les attributs
@@ -117,11 +117,108 @@ class Form
         // Ouvre la balise label
         $this->formCode .= "<label for='$for'";
 
-        // Ajoute les attributs
+        // Ajout des attributs si pas d'attributs rien
         $this->formCode .= $attributs ? $this->ajoutAttributs($attributs) : '';
 
         // Ferme la balise ouvrante, ajoute l'intitulé du label et la balise fermante
         $this->formCode .= ">$texte</label>";
+
+        return $this;
+    }
+
+    /* 
+        -------------------------------------------------------- BALISE INPUT --------------------------------------------------------
+    */
+    /**
+     * Ajoute une balise input
+     * @param string $type type de la balise input
+     * @param string $nom name de la balise input
+     * @param array $attributs 
+     * @return Form
+     */
+    public function ajoutInput(string $type, string $nom, array $attributs = []): self
+    {
+        // On ouvre la balise
+        $this->formCode .= "<input type='$type' name='$nom'";
+
+        // Ajout des attributs et ferme la balise sinon ferme juste la balise
+        $this->formCode .= $attributs ? $this->ajoutAttributs($attributs) . '>' : '>';
+
+        return $this;
+    }
+
+    /* 
+        -------------------------------------------------------- BALISE TEXTAREA --------------------------------------------------------
+    */
+    /**
+     * Ajoute un champ textarea
+     * @param string $nom name du champ
+     * @param string $valeur Valeur du champ
+     * @param array $attributs
+     * @return Form Retourne l'objet
+     */
+    public function ajoutTextarea(string $nom, string $valeur = '', array $attributs = []): self
+    {
+        // Ouvre la balise
+        $this->formCode .= "<textarea name='$nom'";
+
+        // Ajoute les attributs sinon s'il n'y en a pas rien
+        $this->formCode .= $attributs ? $this->ajoutAttributs($attributs) : '';
+
+        // Ferme la balise ouvrante, ajoute le texte et la balise fermante 
+        $this->formCode .= ">$valeur</textarea>";
+
+        return $this;
+    }
+
+    /* 
+        -------------------------------------------------------- BALISE SELECT --------------------------------------------------------
+    */
+    /**
+     * Ajout d'un select avec ses options
+     * @param string $nom name de select
+     * @param array $options Liste des options (tableau associatif)
+     * @param array $attributs 
+     * @return Form
+     */
+    public function ajoutSelect(string $nom, array $options, array $attributs = []): self
+    {
+        // Ouvre la balise
+        $this->formCode .= "<select name='$nom'";
+
+        // Ajout des attributs et ferme la balise sinon ferme juste la balise
+        $this->formCode .= $attributs ? $this->ajoutAttributs($attributs) . '>' : '>';
+
+        // Ajoute les options
+        foreach ($options as $valeur => $texte) {
+            $this->formCode .= "<option value='$valeur'>$texte</option>";
+        }
+
+        // Ajoute la balise fermante
+        $this->formCode .= '</select>';
+
+        return $this;
+    }
+
+    /* 
+        -------------------------------------------------------- BALISE BUTTON --------------------------------------------------------
+    */
+    /**
+     * Ajout d'un bouton
+     * @param string $texte 
+     * @param array $attributs 
+     * @return Form
+     */
+    public function ajoutBouton(string $texte, array $attributs = []): self
+    {
+        // Ouvre la balise
+        $this->formCode .= '<button ';
+
+        // Ajoute les attributs sinon s'il n'y en a pas rien
+        $this->formCode .= $attributs ? $this->ajoutAttributs($attributs) : '';
+
+        // Ferme la balise ouvrante et ajoute le texte et la balise fermante
+        $this->formCode .= ">$texte</button>";
 
         return $this;
     }
