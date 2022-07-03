@@ -35,7 +35,7 @@ class Model extends Db
         $champs = [];
         $valeurs = [];
 
-        // On boucle pour éclater le tableau $criteres en deux tableaux
+        // Boucle pour éclater le tableau $criteres en deux tableaux
         foreach ($criteres as $champ => $valeur) {
 
             // On push dans les tableaux $champs et $valeurs ($valeur pour le ? de "$champ = ?")
@@ -46,7 +46,6 @@ class Model extends Db
         // Transforme le tableau $champs et ses champs séparées en une chaîne de caractères qui rassemble les champs sur une seule ligne.
         $liste_champs = implode(' AND ', $champs);
 
-        // On exécute la requête
         return $this->requete("SELECT * FROM {$this->table} WHERE $liste_champs", $valeurs)->fetchAll();
     }
 
@@ -62,10 +61,10 @@ class Model extends Db
     // Execute ou prépare une requête selon les cas
     public function requete(string $sql, array $attributs = null)
     {
-        // On récupère l'instance de Db
+        // Récupère l'instance de Db
         $this->db = Db::getInstance();
 
-        // On vérifie si on a des attributs
+        // Vérifie si on a des attributs
         if ($attributs !== null) {
             // Requête préparée
             $query = $this->db->prepare($sql);
@@ -80,14 +79,15 @@ class Model extends Db
     /* 
         ////////////////////////////////////////  CREATE  //////////////////////////////////////// 
     */
-    // Créer une annonce
-    public function create(Model $model)
+    public function create()
     {
         $champs = [];
         $interro = [];
         $valeurs = [];
 
-        foreach ($model as $champ => $valeur) {
+        // Boucle pour éclater le tableau
+        foreach ($this as $champ => $valeur) {
+            // ex : INSERT INTO annonces (titre, description, actif) VALUES (?, ?, ?)
             if ($valeur != null && $champ != 'db' && $champ != 'table') {
                 $champs[] = $champ;
                 $interro[] = "?";
@@ -95,32 +95,34 @@ class Model extends Db
             }
         }
 
+        // Transforme les tableaux en chaîne de caractères
         $liste_champs = implode(', ', $champs);
         $liste_interro = implode(', ', $interro);
 
-        // On execute la requête
         return $this->requete('INSERT INTO ' . $this->table . ' (' . $liste_champs . ')VALUES(' . $liste_interro . ')', $valeurs);
     }
 
     /* 
         ////////////////////////////////////////  UPDATE  //////////////////////////////////////// 
     */
-    public function update(int $id, Model $model)
+    public function update()
     {
         $champs = [];
         $valeurs = [];
 
-        foreach ($model as $champ => $valeur) {
+        // Boucle pour éclater le tableau
+        foreach ($this as $champ => $valeur) {
+            // ex : UPDATE annonces SET titre = ?, description = ?, actif = ? WHERE id= ?
             if ($valeur !== null && $champ != 'db' && $champ != 'table') {
                 $champs[] = "$champ = ?";
                 $valeurs[] = $valeur;
             }
         }
-        $valeurs[] = $id;
+        $valeurs[] = $this->id;
 
+        // Transforme le tableau champs en une chaîne de caractères
         $liste_champs = implode(', ', $champs);
 
-        // On execute la requête
         return $this->requete('UPDATE ' . $this->table . ' SET ' . $liste_champs . ' WHERE id = ?', $valeurs);
     }
 
@@ -135,15 +137,15 @@ class Model extends Db
     /* 
         ////////////////////////////////////////  HYDRATER  //////////////////////////////////////// 
     */
-    public function hydrate(array $donnees)
+    public function hydrate($donnees)
     {
         foreach ($donnees as $key => $value) {
-            // On récupère le nom du setter correspondant à l'attribut.
+            // Récupère le nom du setter correspondant à l'attribut.
             $method = 'set' . ucfirst($key);
 
             // Si le setter correspondant existe.
             if (method_exists($this, $method)) {
-                // On appelle le setter.
+                // Appelle le setter.
                 $this->$method($value);
             }
         }
