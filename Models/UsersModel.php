@@ -18,6 +18,15 @@ class UsersModel extends Model
         $this->table = strtolower(str_replace('Model', '', $class));
     }
 
+    /**
+     * Récupère un utilisateur à partir de son email
+     * @param string $email
+     * @return mixed
+     */
+    public function findOneByEmail(string $email)
+    {
+        return $this->requete("SELECT * FROM {$this->table} WHERE email = ?", [$email])->fetch();
+    }
 
     /* 
         -------------------------------------------------------- GETTERS/SETTERS --------------------------------------------------------

@@ -7,6 +7,10 @@ use App\Core\Form;
 
 class UsersController extends Controller
 {
+    /**
+     * Connexion des utilisateurs
+     * @return void
+     */
     public function login()
     {
         $form = new Form;
@@ -23,5 +27,26 @@ class UsersController extends Controller
 
         // Envoi le formulaire à la vue
         $this->render('users/login', ['loginForm' => $form->create()]);
+    }
+
+    /**
+     * Inscription des utilisateurs
+     * @return void
+     */
+    public function register()
+    {
+        var_dump($_POST);
+        $form = new Form;
+
+        $form->debutForm()
+            ->ajoutLabelFor('email', 'E-mail :')
+            ->ajoutInput('email', 'email', ['class' => 'form-control', 'id' => 'email'])
+            ->ajoutLabelFor('pass', 'Mot de passe :')
+            ->ajoutInput('password', 'password', ['class' => 'form-control', 'id' => 'pass'])
+            ->ajoutBouton('M\'inscrire', ['class' => 'btn btn-primary my-4'])
+            ->finForm();
+
+        // Envoi le formulaire à la vue
+        $this->render('users/register', ['registerForm' => $form->create()]);
     }
 }
