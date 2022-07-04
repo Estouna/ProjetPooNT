@@ -6,6 +6,9 @@ use App\Models\AnnoncesModel;
 
 class AnnoncesController extends Controller
 {
+    /* 
+        -------------------------------------------------------- LISTE ANNONCES ACTIVES --------------------------------------------------------
+    */
     public function index()
     {
         // Instancie le modèle correspondant à la table annonces
@@ -18,6 +21,9 @@ class AnnoncesController extends Controller
         $this->render('annonces/index', compact('annonces'));
     }
 
+    /* 
+        -------------------------------------------------------- LIRE UNE ANNONCE --------------------------------------------------------
+    */
     /**
      * Affiche une annonce
      * @param integer $id

@@ -1,7 +1,10 @@
-<h1>Inscription</h1>
+<h1 class="text-primary text-center my-5">Inscription</h1>
 
 <!-- 
-    Formulaire d'inscription'
+    -------------------------------------------------------- FORMULAIRE D'INSCRIPTION -------------------------------------------------------- 
 -->
 <?= $registerForm ?>
-<a href="/users/login">Déjà inscrit - Me connecter</a>
+
+<div class="text-center">
+    <a href="/users/login">Déjà inscrit - Me connecter</a>
+</div>

@@ -222,4 +222,25 @@ class Form
 
         return $this;
     }
+
+
+    /* 
+        -------------------------------------------------------- TEST BALISE DE DIV --------------------------------------------------------
+    */
+    public function debutDiv(array $attributs = []): self
+    {
+        // Ouvre la balise form
+        $this->formCode .= "<div ";
+
+        // Ajout des attributs et ferme la balise d'ouverture si pas d'attributs ferme seulement la balise
+        $this->formCode .= $attributs ? $this->ajoutAttributs($attributs) . '>' : '>';
+
+        return $this;
+    }
+
+    public function finDiv(): self
+    {
+        $this->formCode .= '</div>';
+        return $this;
+    }
 }

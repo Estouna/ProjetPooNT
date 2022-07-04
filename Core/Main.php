@@ -11,6 +11,9 @@ class Main
 {
     public function start()
     {
+        // Démarre la session
+        session_start();
+        
         // Récupère l'URL "/public/annonces/details/a/b/c/"
         $uri = $_SERVER['REQUEST_URI'];
 

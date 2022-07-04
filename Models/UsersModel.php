@@ -18,6 +18,9 @@ class UsersModel extends Model
         $this->table = strtolower(str_replace('Model', '', $class));
     }
 
+    /* 
+        -------------------------------------------------------- METHODES --------------------------------------------------------
+    */
     /**
      * Récupère un utilisateur à partir de son email
      * @param string $email
