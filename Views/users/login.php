@@ -1,7 +1,10 @@
-<h1>Connexion</h1>
+<h1 class="text-primary text-center my-5">Connexion</h1>
 
 <!-- 
-    Formulaire de connexion
+    -------------------------------------------------------- FORMULAIRE DE CONNEXION-------------------------------------------------------- 
 -->
 <?= $loginForm ?>
-<a href="/users/register">Pas encore inscrit - S'inscrire</a>
+
+<div class="text-center">
+    <a href="/users/register">Pas encore inscrit - S'inscrire</a>
+</div>

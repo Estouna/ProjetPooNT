@@ -1,1 +1,1 @@
-<h1 class="text-center my-5">Accueil</h1>
+<h1 class="text-primary text-center my-5">Accueil</h1>

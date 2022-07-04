@@ -7,6 +7,9 @@ namespace App\Controllers;
  */
 abstract class Controller
 {
+    /* 
+        -------------------------------------------------------- AFFICHAGE --------------------------------------------------------
+    */
     /**
      * Renvoi les informations à une vue pour l'affichage
      *

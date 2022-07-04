@@ -88,7 +88,7 @@ class Model extends Db
         // Boucle pour éclater le tableau
         foreach ($this as $champ => $valeur) {
             // ex : INSERT INTO annonces (titre, description, actif) VALUES (?, ?, ?)
-            if ($valeur != null && $champ != 'db' && $champ != 'table') {
+            if ($valeur !== null && $champ != 'db' && $champ != 'table') {
                 $champs[] = $champ;
                 $interro[] = "?";
                 $valeurs[] = $valeur;
