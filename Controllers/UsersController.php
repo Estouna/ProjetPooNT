@@ -17,24 +17,47 @@ class UsersController extends Controller
      */
     public function login()
     {
+        // Vérifie le formulaire (juste si les champs existent et qu'ils ne sont pas vides, à compléter plus tard)
+        if (Form::validate($_POST, ['email', 'password'])) {
+
+            // Récupère l'utilisateur par son email
+            $userModel = new UsersModel;
+            $userArray = $userModel->findOneByEmail(strip_tags($_POST['email']));
+
+            // Si l'utilisateur n'existe pas
+            if (!$userArray) {
+                http_response_code(404);
+                header('Location: /users/login');
+                exit;
+            }
+
+            // S'il existe hydrate l'objet
+            $user = $userModel->hydrate($userArray);
+
+            // Vérifie le mot de passe
+            if (password_verify($_POST['password'], $user->getPassword())) {
+                $user->setSession();
+                header('Location: /');
+                exit;
+            }
+        }
+
         $form = new Form;
 
         // On peut changer les valeurs par défaut (method et action) et mettre d'autres attributs dans un tableau. 
         // Exemple: $form->debutForm('get', 'login.php', ['class' => 'form', 'id' => 'loginForm'])
-        $form->debutDiv(['class' => 'd-flex justify-content-center align-items-center'])
-            ->debutForm('post', '#', ['class' => 'w-75'])
-            ->ajoutLabelFor('email', 'E-mail :')
+        $form->debutForm('post', '#', ['class' => 'w-75'])
+            ->ajoutLabelFor('email', 'E-mail :', ['class' => 'text-primary'])
             ->ajoutInput('email', 'email', ['class' => 'form-control', 'id' => 'email'])
-            ->ajoutLabelFor('password', 'Mot de passe :')
+            ->ajoutLabelFor('password', 'Mot de passe :', ['class' => 'text-primary'])
             ->ajoutInput('password', 'password', ['class' => 'form-control', 'id' => 'password'])
             ->debutDiv(['class' => 'text-center mt-3'])
             ->ajoutBouton('Me connecter', ['class' => 'btn btn-primary my-4'])
             ->finDiv()
-            ->finForm()
-            ->finDiv();
+            ->finForm();
 
         // Envoi le formulaire à la vue
-        $this->render('users/login', ['loginForm' => $form->create()]);
+        $this->render('users/login', ['loginForm' => $form->create()], 'login-register');
     }
 
     /* 
@@ -46,7 +69,7 @@ class UsersController extends Controller
      */
     public function register()
     {
-        // Vérifie le formulaire (juste si les champs existent et qu'ils ne sont pas vides, à compléter plus tard)
+        // Vérifie si le formulaire est valide
         if (Form::validate($_POST, ['email', 'password'])) {
             // Nettoie l'adresse mail
             $email = strip_tags($_POST['email']);
@@ -65,19 +88,31 @@ class UsersController extends Controller
 
         $form = new Form;
 
-        $form->debutDiv(['class' => 'd-flex justify-content-center align-items-center'])
-            ->debutForm('post', '#', ['class' => 'w-75'])
-            ->ajoutLabelFor('email', 'E-mail :')
+        $form->debutForm('post', '#', ['class' => 'w-75'])
+            ->ajoutLabelFor('email', 'E-mail :', ['class' => 'text-primary'])
             ->ajoutInput('email', 'email', ['class' => 'form-control', 'id' => 'email'])
-            ->ajoutLabelFor('pass', 'Mot de passe :')
+            ->ajoutLabelFor('pass', 'Mot de passe :', ['class' => 'text-primary'])
             ->ajoutInput('password', 'password', ['class' => 'form-control', 'id' => 'pass'])
             ->debutDiv(['class' => 'text-center mt-3'])
             ->ajoutBouton('M\'inscrire', ['class' => 'btn btn-primary my-4'])
             ->finDiv()
-            ->finForm()
-            ->finDiv();
+            ->finForm();
 
         // Envoi le formulaire à la vue
-        $this->render('users/register', ['registerForm' => $form->create()]);
+        $this->render('users/register', ['registerForm' => $form->create()], 'login-register');
+    }
+
+    /* 
+        -------------------------------------------------------- DECONNEXION --------------------------------------------------------
+    */
+    /**
+     * Déconnexion de l'utilisateur
+     * @return exit
+     */
+    public function logout()
+    {
+        unset($_SESSION['user']);
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
     }
 }

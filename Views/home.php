@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="h-100">
 
 <head>
     <meta charset="UTF-8">
@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 </head>
 
-<body>
+<body class="d-flex flex-column h-100">
     <!-- 
         -------------------------------------------------------- BARRE DE NAVIGATION -------------------------------------------------------- 
     -->
@@ -27,9 +27,21 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/annonces">Liste des annonces</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/users/login">Connexion</a>
-                </li>
+            </ul>
+
+            <ul class="navbar-nav ml-auto">
+                <?php if (isset($_SESSION['user']) && !empty($_SESSION['user']['id'])) : ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/users/logout">Déconnexion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/users/profil">Profil</a>
+                    </li>
+                <?php else : ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/users/login">Connexion</a>
+                    </li>
+                <?php endif; ?>
             </ul>
         </div>
     </nav>
@@ -37,14 +49,28 @@
         -------------------------------------------------------- CONTENU -------------------------------------------------------- 
     -->
     <div class="container">
+
         <?= $content ?>
+
+        <!-- BOUTON LISTE ANNONCES-->
+        <div class="text-center mt-5">
+            <a href="/annonces" class="btn btn-primary">Voir la liste des annonces</a>
+        </div>
+
     </div>
+
+
     <!-- 
-        -------------------------------------------------------- BOUTON -------------------------------------------------------- 
+        -------------------------------------------------------- FOOTER -------------------------------------------------------- 
     -->
-    <div class="text-center">
-        <a href="/annonces" class="btn btn-primary">Voir la liste des annonces</a>
-    </div>
+    <footer class="bg-light py-4 footer mt-auto">
+
+        <!-- TEMPS CHARGEMENT -->
+        <div class="container">
+            Page générée en ms <?= round(1000 * (microtime(true) - DEBUG_TIME)) ?>ms
+        </div>
+
+    </footer>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
     </script>

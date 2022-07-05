@@ -1,4 +1,4 @@
-<h1 class="text-primary text-center my-5">Inscription</h1>
+<h1 class="text-primary text-center mb-5">Inscription</h1>
 
 <!-- 
     -------------------------------------------------------- FORMULAIRE D'INSCRIPTION -------------------------------------------------------- 
