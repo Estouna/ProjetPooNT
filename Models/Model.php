@@ -11,16 +11,14 @@ class Model extends Db
 {
     // Table de la base de données
     protected $table;
+
     // Instance de Db
     private $db;
 
     /* 
-        -------------------------------------------------------- METHODES --------------------------------------------------------
+        -------------------------------------------------------- READ --------------------------------------------------------
     */
 
-    /* 
-       ////////////////////////////////////////  READ  //////////////////////////////////////// 
-    */
     // Récupère toutes les données d'une table
     public function findAll()
     {
@@ -55,9 +53,11 @@ class Model extends Db
         return $this->requete("SELECT * FROM {$this->table} WHERE id = $id")->fetch();
     }
 
+
     /* 
-       ////////////////////////////////////////  REQUETE  //////////////////////////////////////// 
+        -------------------------------------------------------- REQUÊTE --------------------------------------------------------
     */
+
     // Execute ou prépare une requête selon les cas
     public function requete(string $sql, array $attributs = null)
     {
@@ -76,9 +76,11 @@ class Model extends Db
         }
     }
 
+
     /* 
-        ////////////////////////////////////////  CREATE  //////////////////////////////////////// 
+        -------------------------------------------------------- CREATE --------------------------------------------------------
     */
+
     public function create()
     {
         $champs = [];
@@ -102,9 +104,11 @@ class Model extends Db
         return $this->requete('INSERT INTO ' . $this->table . ' (' . $liste_champs . ')VALUES(' . $liste_interro . ')', $valeurs);
     }
 
+
     /* 
-        ////////////////////////////////////////  UPDATE  //////////////////////////////////////// 
+        -------------------------------------------------------- UPDATE --------------------------------------------------------
     */
+
     public function update()
     {
         $champs = [];
@@ -126,17 +130,21 @@ class Model extends Db
         return $this->requete('UPDATE ' . $this->table . ' SET ' . $liste_champs . ' WHERE id = ?', $valeurs);
     }
 
+
     /* 
-        ////////////////////////////////////////  DELETE  //////////////////////////////////////// 
+        -------------------------------------------------------- DELETE --------------------------------------------------------
     */
+
     public function delete(int $id)
     {
         return $this->requete("DELETE FROM {$this->table} WHERE id = ?", [$id]);
     }
 
+
     /* 
-        ////////////////////////////////////////  HYDRATER  //////////////////////////////////////// 
+        -------------------------------------------------------- HYDRATER --------------------------------------------------------
     */
+
     public function hydrate($donnees)
     {
         foreach ($donnees as $key => $value) {

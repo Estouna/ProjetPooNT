@@ -21,6 +21,10 @@ class UsersModel extends Model
     /* 
         -------------------------------------------------------- METHODES --------------------------------------------------------
     */
+
+    /* 
+       ----------  TROUVER UN UTILISATEUR PAR SON EMAIL  ----------
+    */
     /**
      * Récupère un utilisateur à partir de son email
      * @param string $email
@@ -29,6 +33,21 @@ class UsersModel extends Model
     public function findOneByEmail(string $email)
     {
         return $this->requete("SELECT * FROM {$this->table} WHERE email = ?", [$email])->fetch();
+    }
+
+    /* 
+       ----------  SESSION UTILISATEUR  ----------
+    */
+    /**
+     * Crée la session de l'utilisateur
+     * @return void
+     */
+    public function setSession()
+    {
+        $_SESSION['user'] = [
+            'id' => $this->id,
+            'email' => $this->email
+        ];
     }
 
     /* 

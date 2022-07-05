@@ -1,4 +1,4 @@
-<h1 class="text-primary text-center my-5">Connexion</h1>
+<h1 class="text-primary text-center mb-5">Connexion</h1>
 
 <!-- 
     -------------------------------------------------------- FORMULAIRE DE CONNEXION-------------------------------------------------------- 
