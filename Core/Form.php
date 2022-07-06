@@ -33,9 +33,10 @@ class Form
 
             // Vérifie si le champ est absent ou vide dans le formulaire
             if (!isset($form[$field]) || empty($form[$field])) {
-                // Sort dès le premier champ faux en retournant false
+                // Sort dès le premier champ non validé
                 return false;
             }
+            
         }
         // Sinon valide en retournant true
         return true;
