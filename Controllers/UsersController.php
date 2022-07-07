@@ -88,7 +88,7 @@ class UsersController extends Controller
     public function register()
     {
         if (isset($_POST['validateReg'])) {
-            
+
             // Vérifie si le formulaire est valide
             if (Form::validate($_POST, ['email', 'password'])) {
                 // Nettoie l'adresse mail
@@ -105,7 +105,8 @@ class UsersController extends Controller
                 // Enregistre l'utilisateur dans la bdd
                 $user->create();
 
-                // Redirige vers l'accueil
+                // On redirige avec un message
+                $_SESSION['success'] = "Bienvenue sur notre site";
                 header('Location: /');
                 exit;
             } else {
@@ -117,6 +118,7 @@ class UsersController extends Controller
 
         $form = new Form;
 
+        // Formulaire
         $form->debutForm('post', '#', ['class' => 'w-75'])
             ->ajoutLabelFor('email', 'E-mail :', ['class' => 'text-primary'])
             ->ajoutInput('email', 'email', ['class' => 'form-control', 'id' => 'email'])
@@ -129,6 +131,17 @@ class UsersController extends Controller
 
         // Envoi le formulaire à la vue
         $this->render('users/register', ['registerForm' => $form->create()], 'login-register');
+    }
+
+    // Provisoire
+    public function profil()
+    {
+        if (isset($_SESSION['user']) && !empty($_SESSION['user']['id'])) {
+            $this->render('users/profil');
+        } else {
+            header('Location: /');
+            exit;
+        }
     }
 
     /* 

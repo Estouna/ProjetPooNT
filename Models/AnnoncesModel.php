@@ -9,6 +9,7 @@ class AnnoncesModel extends Model
     protected $description;
     protected $created_at;
     protected $actif;
+    protected $users_id;
 
 
     /* 
@@ -32,7 +33,6 @@ class AnnoncesModel extends Model
 
     /**
      * Set the value of id
-     *
      * @return  self
      */
     public function setId($id)
@@ -52,7 +52,6 @@ class AnnoncesModel extends Model
 
     /**
      * Set the value of titre
-     *
      * @return  self
      */
     public function setTitre($titre)
@@ -72,7 +71,6 @@ class AnnoncesModel extends Model
 
     /**
      * Set the value of description
-     *
      * @return  self
      */
     public function setDescription($description)
@@ -92,7 +90,6 @@ class AnnoncesModel extends Model
 
     /**
      * Set the value of created_at
-     *
      * @return  self
      */
     public function setCreated_at($created_at)
@@ -112,12 +109,30 @@ class AnnoncesModel extends Model
 
     /**
      * Set the value of actif
-     *
      * @return  self
      */
     public function setActif($actif)
     {
         $this->actif = $actif;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of users_id
+     */ 
+    public function getUsers_id():int
+    {
+        return $this->users_id;
+    }
+
+    /**
+     * Set the value of users_id
+     * @return  self
+     */ 
+    public function setUsers_id(int $users_id)
+    {
+        $this->users_id = $users_id;
 
         return $this;
     }
