@@ -65,7 +65,7 @@ class Form
                 $str .= " $attribut";
             } else {
                 // Ajoute attribut='valeur'
-                $str .= " $attribut='$valeur'";
+                $str .= " $attribut=\"$valeur\"";
             }
         }
 
@@ -192,7 +192,7 @@ class Form
 
         // Ajoute les options
         foreach ($options as $valeur => $texte) {
-            $this->formCode .= "<option value='$valeur'>$texte</option>";
+            $this->formCode .= "<option value=\"$valeur\">$texte</option>";
         }
 
         // Ajoute la balise fermante

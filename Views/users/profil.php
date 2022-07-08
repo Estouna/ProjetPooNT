@@ -4,10 +4,6 @@
 <div class="mt-5">
     <a href="/annonces/ajouter" class="btn btn-primary btn-sm btn-block">Publier une annonce</a>
 </div>
-<!-- BOUTON MODIFIER-->
-<div class="mt-5">
-    <a href="#" class="btn btn-primary btn-sm btn-block">Modifier une annonce</a>
-</div>
 <!-- BOUTON SUPPRIMER-->
 <div class="mt-5">
     <a href="#" class="btn btn-primary btn-sm btn-block">Supprimer une annonce</a>
