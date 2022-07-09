@@ -18,40 +18,44 @@ class UsersController extends Controller
      */
     public function login()
     {
-        // Vérifie le formulaire (juste si les champs existent et qu'ils ne sont pas vides, à compléter plus tard)
-        if (Form::validate($_POST, ['email', 'password'])) {
-            // Récupère l'utilisateur par son email
-            $userModel = new UsersModel;
-            $userArray = $userModel->findOneByEmail(strip_tags($_POST['email']));
+        if (isset($_POST['validateLog'])) {
+            // Vérifie le formulaire (juste si les champs existent et qu'ils ne sont pas vides, à compléter plus tard)
+            if (Form::validate($_POST, ['email', 'password'])) {
+                // Récupère l'utilisateur par son email
+                $userModel = new UsersModel;
+                $userArray = $userModel->findOneByEmail(strip_tags($_POST['email']));
 
-            // Si l'utilisateur n'existe pas
-            if (!$userArray) {
-                // http_response_code(404);
-                $_SESSION['erreur'] = 'L\'adresse email et/ou le mot de passe est incorrect';
-                header('Location: /users/login');
-                exit;
-            }
+                // Si l'utilisateur n'existe pas
+                if (!$userArray) {
+                    // http_response_code(404);
+                    $_SESSION['erreur'] = 'L\'adresse email et/ou le mot de passe est incorrect';
+                    header('Location: /users/login');
+                    exit;
+                }
 
-            // S'il existe hydrate l'objet
-            $user = $userModel->hydrate($userArray);
+                // S'il existe hydrate l'objet
+                $user = $userModel->hydrate($userArray);
 
-            // Vérifie le mot de passe
-            if (password_verify($_POST['password'], $user->getPassword())) {
-                // Si bon mot de passe, création la session
-                $user->setSession();
+                // Vérifie le mot de passe
+                if (password_verify($_POST['password'], $user->getPassword())) {
+                    // Si bon mot de passe, création la session
+                    $user->setSession();
 
-                // Redirige vers l'accueil
-                header('Location: /');
-                exit;
+                    // Redirige vers l'accueil
+                    header('Location: /');
+                    exit;
+                } else {
+                    // Si mauvais mot de passe
+                    $_SESSION['erreur'] = 'L\'adresse email et/ou le mot de passe est incorrect';
+                    header('Location: /users/login');
+                    exit;
+                }
             } else {
-                // Si mauvais mot de passe
-                $_SESSION['erreur'] = 'L\'adresse email et/ou le mot de passe est incorrect';
+                // Message de session et rechargement de la page
+                $_SESSION['erreur'] = !empty($_POST) ? 'Tous les champs doivent être remplis' : '';
                 header('Location: /users/login');
                 exit;
             }
-        } else {
-            // Message de session et rechargement de la page
-            $_SESSION['erreur'] = !empty($_POST) ? 'Tous les champs doivent être remplis' : '';
         }
 
 
@@ -84,29 +88,34 @@ class UsersController extends Controller
     public function register()
     {
 
+        if (isset($_POST['validateReg'])) {
+            // Vérifie si le formulaire est valide
+            if (Form::validate($_POST, ['email', 'password'])) {
+                // Nettoie l'adresse mail
+                $email = strip_tags($_POST['email']);
 
-        // Vérifie si le formulaire est valide
-        if (Form::validate($_POST, ['email', 'password'])) {
-            // Nettoie l'adresse mail
-            $email = strip_tags($_POST['email']);
+                // Hash le mot de passe (ARGON2I à partir de PHP 7.2)
+                $pass = password_hash($_POST['password'], PASSWORD_ARGON2I);
 
-            // Hash le mot de passe (ARGON2I à partir de PHP 7.2)
-            $pass = password_hash($_POST['password'], PASSWORD_ARGON2I);
+                // Hydrate l'utilisateur
+                $user = new UsersModel;
+                $user->setEmail($email)
+                    ->setPassword($pass)
+                    ->setRoles(json_encode('["ROLE_USER"]'))
+                    ;
 
-            // Hydrate l'utilisateur
-            $user = new UsersModel;
-            $user->setEmail($email)
-                ->setPassword($pass);
+                // Enregistre l'utilisateur dans la bdd
+                $user->create();
 
-            // Enregistre l'utilisateur dans la bdd
-            $user->create();
-
-            // On redirige avec un message
-            $_SESSION['success'] = "Merci et bienvenue";
-            header('Location: /');
-            exit;
-        } else {
-            $_SESSION['erreur'] = !empty($_POST) ? 'Tous les champs doivent être remplis' : '';
+                // On redirige avec un message
+                $_SESSION['success'] = "Merci et bienvenue";
+                header('Location: /');
+                exit;
+            } else {
+                $_SESSION['erreur'] = !empty($_POST) ? 'Tous les champs doivent être remplis' : '';
+                header('Location: /users/register');
+                exit;
+            }
         }
 
 

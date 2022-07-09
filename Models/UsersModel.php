@@ -7,6 +7,7 @@ class UsersModel extends Model
     protected $id;
     protected $email;
     protected $password;
+    protected $roles;
 
 
     /* 
@@ -46,7 +47,8 @@ class UsersModel extends Model
     {
         $_SESSION['user'] = [
             'id' => $this->id,
-            'email' => $this->email
+            'email' => $this->email,
+            'roles' => $this->roles
         ];
     }
 
@@ -54,21 +56,21 @@ class UsersModel extends Model
         -------------------------------------------------------- GETTERS/SETTERS --------------------------------------------------------
     */
     /**
-     * Get the value of password
+     * Get the value of id
      */
-    public function getPassword()
+    public function getId()
     {
-        return $this->password;
+        return $this->id;
     }
 
     /**
-     * Set the value of password
+     * Set the value of id
      *
      * @return  self
      */
-    public function setPassword($password)
+    public function setId($id)
     {
-        $this->password = $password;
+        $this->id = $id;
 
         return $this;
     }
@@ -94,21 +96,48 @@ class UsersModel extends Model
     }
 
     /**
-     * Get the value of id
+     * Get the value of password
      */
-    public function getId()
+    public function getPassword()
     {
-        return $this->id;
+        return $this->password;
     }
 
     /**
-     * Set the value of id
+     * Set the value of password
      *
      * @return  self
      */
-    public function setId($id)
+    public function setPassword($password)
     {
-        $this->id = $id;
+        $this->password = $password;
+
+        return $this;
+    }
+
+
+
+    /**
+     * Get the value of roles
+     * @return array
+     */
+    public function getRoles():array
+    {
+        // Récupère les rôles qui ont été donnés
+        $roles = $this->roles;
+        // push qui permet d'avoir par défaut ROLE_USER même s'il y a Null dans la bdd
+        $roles[] = 'ROLE_USER';
+        // pour supprimer les éventuels doublons de la bdd (2x 'ROLE_USER')
+        return array_unique($roles);
+    }
+
+    /**
+     * Set the value of roles
+     * @return  self
+     */
+    public function setRoles($roles)
+    {
+        $this->roles = json_decode($roles);
 
         return $this;
     }

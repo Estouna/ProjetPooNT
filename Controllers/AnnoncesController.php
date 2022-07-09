@@ -56,36 +56,36 @@ class AnnoncesController extends Controller
         // Vérifie si la session contient les informations d'un utilisateur
         if (isset($_SESSION['user']) && !empty($_SESSION['user']['id'])) {
 
-                // Vérifie que les champs existent et ne sont pas vides (à compléter)
-                if (Form::validate($_POST, ['titre', 'description'])) {
-                    // Sécurise les données
-                    $titre = strip_tags($_POST['titre']);
-                    $description = strip_tags($_POST['description']);
+            // Vérifie que les champs existent et ne sont pas vides (à compléter)
+            if (Form::validate($_POST, ['titre', 'description'])) {
+                // Sécurise les données
+                $titre = strip_tags($_POST['titre']);
+                $description = strip_tags($_POST['description']);
 
-                    // Instancie le modèle des annonces
-                    $annonce = new AnnoncesModel;
+                // Instancie le modèle des annonces
+                $annonce = new AnnoncesModel;
 
-                    // Hydrate l'annonce
-                    $annonce->setTitre($titre)
-                        ->setDescription($description)
-                        ->setUsers_id($_SESSION['user']['id']);
+                // Hydrate l'annonce
+                $annonce->setTitre($titre)
+                    ->setDescription($description)
+                    ->setUsers_id($_SESSION['user']['id']);
 
-                    // Enregistre l'annonce dans la bdd
-                    $annonce->create();
+                // Enregistre l'annonce dans la bdd
+                $annonce->create();
 
-                    // On redirige avec un message
-                    $_SESSION['success'] = "Votre annonce a été enregistrée";
-                    header('Location: /');
-                    exit;
-                } else {
-                    // Message de session
-                    $_SESSION['erreur'] = !empty($_POST) ? 'Vous devez remplir tous les champs' : '';
-                    //header('Location: ' . $_SERVER['HTTP_REFERER']);
-                    $titre = isset($_POST['titre']) ? strip_tags($_POST['titre']) : '';
-                    $description = isset($_POST['description']) ? strip_tags($_POST['description']) : '';
-                    
-                }
-            
+                // On redirige avec un message
+                $_SESSION['success'] = "Votre annonce a été enregistrée";
+                header('Location: /');
+                exit;
+            } else {
+                // Message de session
+                $_SESSION['erreur'] = !empty($_POST) ? 'Vous devez remplir tous les champs' : '';
+
+                // Laisse le texte entré
+                $titre = isset($_POST['titre']) ? strip_tags($_POST['titre']) : '';
+                $description = isset($_POST['description']) ? strip_tags($_POST['description']) : '';
+            }
+
 
             $form = new Form;
 
@@ -95,7 +95,7 @@ class AnnoncesController extends Controller
                 ->ajoutInput('text', 'titre', [
                     'class' => 'form-control',
                     'value' => $titre
-                    ])
+                ])
                 ->ajoutLabelFor('description', 'Texte de l\'annonce :')
                 ->ajoutTextarea('description', $description, ['class' => 'form-control'])
                 ->ajoutBouton('Publier', ['type' => 'submit', 'name' => 'validatePubli', 'class' => 'btn btn-primary my-4'])
@@ -139,32 +139,32 @@ class AnnoncesController extends Controller
                 header('Location: /');
                 exit;
             }
-                // Vérifie que les champs existent et ne sont pas vides (à compléter)
-                if (Form::validate($_POST, ['titre', 'description'])) {
-                    // Sécurise les données
-                    $titre = strip_tags($_POST['titre']);
-                    $description = strip_tags($_POST['description']);
+            // Vérifie que les champs existent et ne sont pas vides (à compléter)
+            if (Form::validate($_POST, ['titre', 'description'])) {
+                // Sécurise les données
+                $titre = strip_tags($_POST['titre']);
+                $description = strip_tags($_POST['description']);
 
-                    // Instancie le modèle des annonces
-                    $annonceModif = new AnnoncesModel;
+                // Instancie le modèle des annonces
+                $annonceModif = new AnnoncesModel;
 
-                    // Hydrate (sans users_id pour ne pas transférer id si modérateur ou admin modifie)
-                    $annonceModif->setId($annonce->id)
-                        ->setTitre($titre)
-                        ->setDescription($description);
+                // Hydrate (sans users_id pour ne pas transférer id si modérateur ou admin modifie)
+                $annonceModif->setId($annonce->id)
+                    ->setTitre($titre)
+                    ->setDescription($description);
 
-                    // Mise à jour de l'annonce dans la bdd
-                    $annonceModif->update();
+                // Mise à jour de l'annonce dans la bdd
+                $annonceModif->update();
 
-                    // On redirige avec un message
-                    $_SESSION['success'] = "Votre annonce a bien été modifiée";
-                    header('Location: /');
-                    exit;
-                } else {
-                    // Message de session et rechargement de la page
-                    $_SESSION['erreur'] = !empty($_POST) ? 'Vous devez remplir tous les champs' : '';
-                }
-            
+                // On redirige avec un message
+                $_SESSION['success'] = "Votre annonce a bien été modifiée";
+                header('Location: /');
+                exit;
+            } else {
+                // Message de session et rechargement de la page
+                $_SESSION['erreur'] = !empty($_POST) ? 'Vous devez remplir tous les champs' : '';
+            }
+
 
             $form = new Form;
 
