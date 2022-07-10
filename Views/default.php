@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Titre</title>
+    <title>Mon blog</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 </head>
 
@@ -32,12 +32,16 @@
 
             <ul class="navbar-nav ml-auto">
                 <?php if (isset($_SESSION['user']) && !empty($_SESSION['user']['id'])) : ?>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="/users/logout">Déconnexion</a>
-                    </li>
+                    <?php if (isset($_SESSION['user']['roles']) && in_array('ROLE_ADMIN', $_SESSION['user']['roles'])) : ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin">Admin</a>
+                        </li>
+                    <?php endif; ?>
                     <li class="nav-item">
                         <a class="nav-link" href="/users/profil">Profil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/users/logout">Déconnexion</a>
                     </li>
 
                 <?php else : ?>
@@ -55,7 +59,7 @@
         -------------------------------------------------------- CONTENU -------------------------------------------------------- 
     -->
     <div class="container">
-        
+
         <!-- 
         -------------------------------------------------------- MESSAGES -------------------------------------------------------- 
         -->
