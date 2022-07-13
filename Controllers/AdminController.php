@@ -30,6 +30,50 @@ class AdminController extends Controller
     }
 
     /**
+     * Supprime une annonce
+     * @param integer $id
+     * @return void
+     */
+    public function supprimeAnnonce(int $id)
+    {
+        if ($this->isAdmin()) {
+            $annonce = new AnnoncesModel;
+
+            $annonce->delete($id);
+
+            header('Location: /admin/annonces');
+        }
+    }
+
+    /**
+     * Active ou désactive une annonce
+     *
+     * @param integer $id
+     * @return void
+     */
+    public function activeAnnonce(int $id)
+    {
+        if ($this->isAdmin()) {
+            $annoncesModel = new AnnoncesModel;
+
+            $annonceArray = $annoncesModel->find($id);
+
+            if ($annonceArray) {
+                $annonce = $annoncesModel->hydrate($annonceArray);
+                
+                $annonce->setActif($annonce->getActif() ? 0 : 1);
+                // if($annonce->getActif()){
+                //     $annonce->setActif(0);
+                // }else{
+                //     $annonce->setActif(1);
+                // }
+
+                $annonce->update();
+            }
+        }
+    }
+
+    /**
      * Méthode qui vérifie si on est administrateur
      * @return boolean
      */

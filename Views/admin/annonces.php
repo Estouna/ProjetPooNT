@@ -19,7 +19,8 @@
                     </div>
                 </td>
                 <td>
-                    <a href="/annonces/modifier/<?= $annonce->id ?>" class="btn btn-warning">Modifier</a><a href="/admin/supprimeAnnonce/<?= $annonce->id ?>" class="btn btn-danger">Supprimer</a>
+                    <a href="/annonces/modifier/<?= $annonce->id ?>" class="btn btn-warning">Modifier</a>
+                    <a href="/admin/supprimeAnnonce/<?= $annonce->id ?>" class="btn btn-danger" onclick='return confirm(" Cette action est irréversible, êtes-vous sûr ? ")'>Supprimer</a>
                 </td>
             </tr>
         <?php endforeach; ?>

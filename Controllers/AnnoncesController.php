@@ -134,11 +134,16 @@ class AnnoncesController extends Controller
 
             // Si l'id de l'utilisateur de l'annonce ne correspond pas à l'id de session de l'utilisateur 
             if ($annonce->users_id !== $_SESSION['user']['id']) {
-                http_response_code(404);
-                $_SESSION['erreur'] = "Vous n'avez pas accès à cette page";
-                header('Location: /');
-                exit;
+                // Si dans le tableau de la session de l'utilisateur, le rôle 'ROLE_ADMIN' n'existe pas
+                if (!in_array('ROLE_ADMIN', $_SESSION['user']['roles'])) {
+                    // Redirige vers l'accueil
+                    http_response_code(404);
+                    $_SESSION['erreur'] = "Vous n'avez pas accès à cette page";
+                    header('Location: /');
+                    exit;
+                }
             }
+
             // Vérifie que les champs existent et ne sont pas vides (à compléter)
             if (Form::validate($_POST, ['titre', 'description'])) {
                 // Sécurise les données
@@ -156,8 +161,13 @@ class AnnoncesController extends Controller
                 // Mise à jour de l'annonce dans la bdd
                 $annonceModif->update();
 
-                // On redirige avec un message
-                $_SESSION['success'] = "Votre annonce a bien été modifiée";
+                // Si admin redirige vers liste des annonces admin
+                if (isset($_SESSION['user']['roles']) && in_array('ROLE_ADMIN', $_SESSION['user']['roles'])) {
+                    header('Location: /admin/annonces');
+                    exit;
+                }
+                // Si utilisateur redirige vers
+                $_SESSION['success'] = "L'annonce a bien été modifiée";
                 header('Location: /');
                 exit;
             } else {
