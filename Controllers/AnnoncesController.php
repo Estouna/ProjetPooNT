@@ -75,7 +75,7 @@ class AnnoncesController extends Controller
 
                 // On redirige avec un message
                 $_SESSION['success'] = "Votre annonce a été enregistrée";
-                header('Location: /');
+                header('Location: /users/profil');
                 exit;
             } else {
                 // Message de session
@@ -166,9 +166,9 @@ class AnnoncesController extends Controller
                     header('Location: /admin/annonces');
                     exit;
                 }
-                // Si utilisateur redirige vers
+                // Si utilisateur redirige vers annonces de l'utilisateur
                 $_SESSION['success'] = "L'annonce a bien été modifiée";
-                header('Location: /');
+                header('Location: /users/annonces');
                 exit;
             } else {
                 // Message de session et rechargement de la page

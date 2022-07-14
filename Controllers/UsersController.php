@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\Form;
 use App\Models\UsersModel;
+use App\Models\AnnoncesModel;
 
 
 class UsersController extends Controller
@@ -41,8 +42,14 @@ class UsersController extends Controller
                     // Si bon mot de passe, création la session
                     $user->setSession();
 
-                    // Redirige vers l'accueil
-                    header('Location: /');
+                    // Si admin redirige vers admin
+                    if (isset($_SESSION['user']['roles']) && in_array('ROLE_ADMIN', $_SESSION['user']['roles'])) {
+                        header('Location: /admin');
+                        exit;
+                    }
+
+                    // Redirige vers la page profil
+                    header('Location: /users/profil');
                     exit;
                 } else {
                     // Si mauvais mot de passe
@@ -101,8 +108,7 @@ class UsersController extends Controller
                 $user = new UsersModel;
                 $user->setEmail($email)
                     ->setPassword($pass)
-                    ->setRoles(json_encode('["ROLE_USER"]'))
-                    ;
+                    ->setRoles(json_encode('["ROLE_USER"]'));
 
                 // Enregistre l'utilisateur dans la bdd
                 $user->create();
@@ -136,17 +142,6 @@ class UsersController extends Controller
         $this->render('users/register', ['registerForm' => $form->create()], 'login-register');
     }
 
-    // Provisoire
-    public function profil()
-    {
-        if (isset($_SESSION['user']) && !empty($_SESSION['user']['id'])) {
-            $this->render('users/profil');
-        } else {
-            header('Location: /');
-            exit;
-        }
-    }
-
     /* 
         -------------------------------------------------------- DECONNEXION --------------------------------------------------------
     */
@@ -158,7 +153,63 @@ class UsersController extends Controller
     public function logout()
     {
         unset($_SESSION['user']);
-        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        header('Location: /users/login');
         exit;
+    }
+
+    /* 
+        -------------------------------------------------------- PAGE PROFIL --------------------------------------------------------
+    */
+    public function profil()
+    {
+        if ($this->isUser()) {
+            $this->render('users/profil');
+        } else {
+            header('Location: /users/login');
+            exit;
+        }
+    }
+
+    /* 
+        -------------------------------------------------------- ANNONCES DE L'UTILSATEUR --------------------------------------------------------
+    */
+    public function annonces()
+    {
+        if ($this->isUser()) {
+            $annoncesModel = new AnnoncesModel;
+
+            $annonces = $annoncesModel->findAllByUserId($_SESSION['user']['id']);
+
+            $this->render('users/annonces', compact('annonces'));
+        }
+    }
+
+    /* 
+        -------------------------------------------------------- SUPPRIME UNE ANNONCE --------------------------------------------------------
+    */
+    public function supprimeUserAnnonce(int $id)
+    {
+        if ($this->isUser()) {
+            $annonce = new AnnoncesModel;
+
+            $annonce->delete($id);
+
+            header('Location: /users/annonces');
+        }
+    }
+
+    /* 
+        -------------------------------------------------------- SUPPRIME UNE ANNONCE --------------------------------------------------------
+    */
+    private function isUser()
+    {
+        // Vérifie si l'utilisateur est connecté et qu'il a un id
+        if (isset($_SESSION['user']) && !empty($_SESSION['user']['id'])) {
+            return true;
+        } else {
+            $_SESSION['erreur'] = "Vous n'avez pas accès à cette zone";
+            header('Location: /users/login');
+            exit;
+        }
     }
 }

@@ -86,7 +86,7 @@ class AdminController extends Controller
         } else {
             // Si pas admin
             $_SESSION['erreur'] = "Vous n'avez pas accès à cette zone";
-            header('Location: /');
+            header('Location: /users/login');
             exit;
         }
     }

@@ -21,6 +21,18 @@ class AnnoncesModel extends Model
     }
 
     /* 
+        -------------------------------------------------------- METHODES --------------------------------------------------------
+    */
+
+    /* 
+       ----------  TROUVER LES ANNONCES D'UN UTILISATEUR PAR SON USER_ID ----------
+    */
+    public function findAllByUserId(int $user_id)
+    {
+        return $this->requete("SELECT * FROM {$this->table} WHERE users_id = $user_id")->fetchAll();
+    }
+
+    /* 
         -------------------------------------------------------- GETTERS/SETTERS --------------------------------------------------------
     */
     /**
