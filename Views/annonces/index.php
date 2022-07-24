@@ -9,3 +9,4 @@
         <p><?= $annonce->description ?></p>
     </article>
 <?php endforeach; ?>
+<?php var_dump($annonces); ?>
