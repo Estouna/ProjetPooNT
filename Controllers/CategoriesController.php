@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\CategoriesModel;
+use App\Models\AnnoncesModel;
 
 class CategoriesController extends Controller
 {
@@ -24,15 +25,31 @@ class CategoriesController extends Controller
     /* 
         -------------------------------------------------------- LISTE DES SOUS-CATEGORIES --------------------------------------------------------
     */
-    /* 
-        -------------------------------------------------------- ANNONCES DE L'UTILSATEUR --------------------------------------------------------
-    */
-    public function sous_categories(int $id)
+    /**
+     * Affiche les sous-catégories
+     *
+     * @param integer $parent_id
+     * @return void
+     */
+    public function sous_categories(int $parent_id)
     {
         $categoriesModel = new CategoriesModel;
 
-        $sub_categories = $categoriesModel->find($id);
+        $sub_categories = $categoriesModel->findSubCategoriesByParent_id($parent_id);
 
-        $this->render('categories/sous-categories', compact('sub-categories'));
+        $this->render('categories/sous_categories', compact('sub_categories'));
+    }
+
+    /* 
+        -------------------------------------------------------- ANNONCES DE L'UTILSATEUR --------------------------------------------------------
+    */
+
+    public function annonces(int $id_category)
+    { 
+        $annoncesModel = new AnnoncesModel;
+        
+        $annonces = $annoncesModel->findAllByCategoryId($id_category);
+        
+        $this->render('categories/annonces', compact('annonces'));
     }
 }

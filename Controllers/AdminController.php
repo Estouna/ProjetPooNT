@@ -3,6 +3,10 @@
 namespace App\Controllers;
 
 use App\Models\AnnoncesModel;
+use App\Models\CategoriesModel;
+use App\Core\Form;
+use RecursiveArrayIterator;
+use RecursiveIteratorIterator;
 
 class AdminController extends Controller
 {
@@ -14,6 +18,84 @@ class AdminController extends Controller
         }
     }
 
+    /* 
+        -------------------------------------------------------- GESTION CATEGORIES --------------------------------------------------------
+    */
+    public function categories()
+    {
+        if ($this->isAdmin()) {
+
+            $categoriesModel = new CategoriesModel;
+
+            // Sélection des annonces actives
+            $categoriesRacines = $categoriesModel->findBy(['parent_id' => 0]);
+
+            // Sans compact(): $this->render('annonces/index', ['annonces' => $annonces]);
+            $this->render('admin/categories', compact('categoriesRacines'), 'admin');
+        }
+    }
+
+    public function ajoutCat()
+    {
+        if ($this->isAdmin()) {
+
+            // Vérifie que les champs existent et ne sont pas vides (à compléter)
+            if (Form::validate($_POST, ['titre', 'titre-sc'])) {
+
+                $titre_cat = htmlspecialchars($_POST['titre']);
+                $titre_sc = htmlspecialchars($_POST['titre-sc']);
+
+                $categories = new CategoriesModel;
+
+                $lft_cat = $categories->findLft_newCatRacine();
+                $rght_cat = $categories->findRght_newCatRacineForOneSubCat();
+                $parent_id_cat = 0;
+                $level_cat = 0;
+
+                // Hydrate la nouvelle catégorie
+                $categories->setName($titre_cat)
+                    ->setLft($lft_cat[0])
+                    ->setRght($rght_cat[0])
+                    ->setParent_id($parent_id_cat)
+                    ->setLevel($level_cat);
+
+                // Enregistre la catégorie dans la bdd
+                $categories->create();
+
+
+                $sous_categories = new CategoriesModel;
+
+                $parent_id_sc = $sous_categories->findCategoryId_Max();
+                $lft_sc = $sous_categories->findLft_newSubCat();
+                $rght_sc = $sous_categories->findRght_newSubCat();
+                $level_sc = 1;
+            
+                // Hydrate la nouvelle catégorie
+                $sous_categories->setName($titre_sc)
+                    ->setLft($lft_sc[0])
+                    ->setrght($rght_sc[0])
+                    ->setParent_id($parent_id_sc[0])
+                    ->setLevel($level_sc);
+
+                // // Enregistre la catégorie dans la bdd
+                $sous_categories->create();
+
+                // On redirige avec un message
+                $_SESSION['success'] = "Votre catégorie a bien été créée";
+                header('Location: /admin/categories');
+                exit;
+            } else {
+                // Message de session
+                $_SESSION['erreur'] = !empty($_POST) ? 'Vous devez donner un titre à la catégorie' : '';
+            }
+        }
+        $this->render('admin/ajoutCat', [], 'admin');
+    }
+
+
+    /* 
+        -------------------------------------------------------- GESTION ANNONCES --------------------------------------------------------
+    */
     /**
      * Affiche la liste des annonces
      * @return void
@@ -60,7 +142,7 @@ class AdminController extends Controller
 
             if ($annonceArray) {
                 $annonce = $annoncesModel->hydrate($annonceArray);
-                
+
                 $annonce->setActif($annonce->getActif() ? 0 : 1);
                 // if($annonce->getActif()){
                 //     $annonce->setActif(0);

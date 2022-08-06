@@ -1,0 +1,3 @@
+- Améliorer sécurité formulaires (peut-être séparer validate())
+- Vérifier que le nom de la nouvelle catégorie racine n'existe pas déjà
+- Revoir organisation MVC des catégories et de l'admin

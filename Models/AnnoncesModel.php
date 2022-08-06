@@ -10,7 +10,7 @@ class AnnoncesModel extends Model
     protected $created_at;
     protected $actif;
     protected $users_id;
-
+    protected $categories_id;
 
     /* 
         -------------------------------------------------------- CONSTRUCTEUR --------------------------------------------------------
@@ -30,6 +30,14 @@ class AnnoncesModel extends Model
     public function findAllByUserId(int $user_id)
     {
         return $this->requete("SELECT * FROM {$this->table} WHERE users_id = $user_id")->fetchAll();
+    }
+
+    /* 
+       ----------  TROUVER LES ANNONCES D'UNE CATEGORIE ----------
+    */
+    public function findAllByCategoryId(int $category_id)
+    {
+        return $this->requete("SELECT * FROM {$this->table} WHERE categories_id = $category_id")->fetchAll();
     }
 
     /* 
@@ -145,6 +153,26 @@ class AnnoncesModel extends Model
     public function setUsers_id(int $users_id)
     {
         $this->users_id = $users_id;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of categories_id
+     */ 
+    public function getCategories_id():int
+    {
+        return $this->categories_id;
+    }
+
+    /**
+     * Set the value of categories_id
+     *
+     * @return  self
+     */ 
+    public function setCategories_id(int $categories_id)
+    {
+        $this->categories_id = $categories_id;
 
         return $this;
     }

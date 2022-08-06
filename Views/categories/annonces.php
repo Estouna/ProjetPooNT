@@ -1,7 +1,10 @@
+
 <!-- 
-    -------------------------------------------------------- LISTE DES ANNONCES ACTIVES -------------------------------------------------------- 
+    -------------------------------------------------------- AFFICHAGE DES ANNONCES DE LA CATEGORIE -------------------------------------------------------- 
 -->
-<h1 class="text-primary text-center my-5">Liste des annonces</h1>
+<div class="text-center mt-5">
+    <h1 class="text-primary">Annonces</h1>
+</div>
 
 <?php foreach ($annonces as $annonce) : ?>
     <article class="border border-primary my-4 p-2 rounded">
