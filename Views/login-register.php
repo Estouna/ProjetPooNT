@@ -1,6 +1,6 @@
 <?php
 include_once 'includes/head.php';
-include_once 'includes/navbarAdmin.php';
+include_once 'includes/navbar.php';
 ?>
 
 
