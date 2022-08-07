@@ -92,6 +92,14 @@ class AdminController extends Controller
         $this->render('admin/ajoutCat', [], 'admin');
     }
 
+    public function ajoutSubCat()
+    {
+        if ($this->isAdmin()) {
+
+        }
+        $this->render('admin/ajoutSubCat', [], 'admin');
+    }
+
 
     /* 
         -------------------------------------------------------- GESTION ANNONCES --------------------------------------------------------

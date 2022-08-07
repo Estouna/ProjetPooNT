@@ -29,7 +29,7 @@
 <?php foreach ($categoriesRacines as $category) : ?>
     <div class="row justify-content-center p-1">
         <div class="text-center border border-primary my-2 p-1 rounded col-sm-5 col-md-4 col-lg-3">
-            <h3><a href="/admin/ajoutCat/<?= $category->id ?>"><?= $category->name ?></a></h3>
+            <h3><a href="/admin/ajoutSubCat/<?= $category->id ?>"><?= $category->name ?></a></h3>
         </div>
     </div>
 <?php endforeach; ?>
