@@ -18,6 +18,8 @@ class CategoriesModel extends Model
     /* 
         -------------------------------------------------------- CONSTRUCTEUR --------------------------------------------------------
     */
+
+
     public function __construct()
     {
         $this->table = 'categories_interval';
@@ -31,8 +33,36 @@ class CategoriesModel extends Model
         return $this->requete("SELECT * FROM {$this->table} WHERE parent_id = $parent_id")->fetchAll();
     }
 
+
     /* 
-       ----------  TROUVER L'ID LE PLUS HAUT ----------
+        -------------------------------------------------------- AJOUT D'UNE NOUVELLE CATEGORIE RACINE ET DE SA SOUS-CATEGORIE --------------------------------------------------------
+    */
+
+
+    /* 
+        ---------- BORD DROIT DE LA NOUVELLE CATEGORIE RACINE ----------
+    */
+    public function findLft_newCatRacine()
+    {
+        $rght_desc = $this->requete("SELECT MAX(rght + 1) FROM {$this->table}")->fetch();
+        $it =  new RecursiveIteratorIterator(new RecursiveArrayIterator($rght_desc));
+        $lft_cat = iterator_to_array($it, false);
+        return $lft_cat;
+    }
+
+    /* 
+    ---------- BORD GAUCHE DE LA NOUVELLE CATEGORIE RACINE ----------
+    */
+    public function findRght_newCatRacineForOneSubCat()
+    {
+        $rght_desc = $this->requete("SELECT MAX(rght + 4) FROM {$this->table}")->fetch();
+        $it =  new RecursiveIteratorIterator(new RecursiveArrayIterator($rght_desc));
+        $rght_cat = iterator_to_array($it, false);
+        return $rght_cat;
+    }
+
+    /* 
+       ----------  TROUVER L'ID LE PLUS HAUT DE LA TABLE DES CATEGORIES ----------
     */
     public function findCategoryId_Max()
     {
@@ -43,24 +73,8 @@ class CategoriesModel extends Model
     }
 
     /* 
-       ----------  TROUVER LE BORD DROIT MAX + 1 DAND LA BDD----------
+       ---------- BORD GAUCHE DE LA SOUS-CATEGORIE DE LA NOUVELLE CATEGORIE RACINE ----------
     */
-    public function findLft_newCatRacine()
-    {
-        $rght_desc = $this->requete("SELECT MAX(rght + 1) FROM {$this->table}")->fetch();
-        $it =  new RecursiveIteratorIterator(new RecursiveArrayIterator($rght_desc));
-        $lft_cat = iterator_to_array($it, false);
-        return $lft_cat;
-    }
-
-    public function findRght_newCatRacineForOneSubCat()
-    {
-        $rght_desc = $this->requete("SELECT MAX(rght + 4) FROM {$this->table}")->fetch();
-        $it =  new RecursiveIteratorIterator(new RecursiveArrayIterator($rght_desc));
-        $rght_cat = iterator_to_array($it, false);
-        return $rght_cat;
-    }
-
     public function findLft_newSubCat()
     {
         $lft_catRacine = $this->requete("SELECT MAX(lft + 1) FROM {$this->table}")->fetch();
@@ -69,6 +83,9 @@ class CategoriesModel extends Model
         return $lft_sc;
     }
 
+    /* 
+       ---------- BORD DROIT DE LA SOUS-CATEGORIE DE LA NOUVELLE CATEGORIE RACINE ----------
+    */
     public function findRght_newSubCat()
     {
         $lft_catRacine = $this->requete("SELECT MAX(lft + 2) FROM {$this->table}")->fetch();
@@ -77,9 +94,31 @@ class CategoriesModel extends Model
         return $rght_sc;
     }
 
+
+    /* 
+        -------------------------------------------------------- AJOUT D'UNE NOUVELLE SOUS-CATEGORIE --------------------------------------------------------
+    */
+
+
+    /* 
+       ----------  MET A JOUR LES BORDS POUR INSERER LA NOUVELLE SOUS CATEGORIE (en sélectionnant le bord droit le plus haut des enfants de la catégorie racine) ----------
+    */
+    public function update_rghtLft($parent_id)
+    {
+        $child_rght_max = $this->requete("SELECT MAX(rght) FROM {$this->table} WHERE parent_id = $parent_id")->fetch();
+        $it =  new RecursiveIteratorIterator(new RecursiveArrayIterator($child_rght_max));
+        $rghtChildMax = iterator_to_array($it, false);
+
+        $this->requete("UPDATE {$this->table} SET rght = rght + 2 WHERE rght > $rghtChildMax[0]");
+
+        $this->requete("UPDATE {$this->table} SET lft = lft + 2 WHERE lft > $rghtChildMax[0]");
+    }
+
     /* 
         -------------------------------------------------------- GETTERS/SETTERS --------------------------------------------------------
     */
+
+
     /**
      * Get the value of id
      */
