@@ -35,6 +35,9 @@ class AdminController extends Controller
         }
     }
 
+    /* 
+        ------------- AJOUT D'UNE NOUVELLE CATEGORIE RACINE ET SA SOUS-CATEGORIE -------------
+    */
     public function ajoutCat()
     {
         if ($this->isAdmin()) {
@@ -69,7 +72,7 @@ class AdminController extends Controller
                 $lft_sc = $sous_categories->findLft_newSubCat();
                 $rght_sc = $sous_categories->findRght_newSubCat();
                 $level_sc = 1;
-            
+
                 // Hydrate la nouvelle catégorie
                 $sous_categories->setName($titre_sc)
                     ->setLft($lft_sc[0])
@@ -92,10 +95,37 @@ class AdminController extends Controller
         $this->render('admin/ajoutCat', [], 'admin');
     }
 
-    public function ajoutSubCat()
+    /* 
+        ------------- AJOUT D'UNE NOUVELLE SOUS-CATEGORIE -------------
+    */
+    public function ajoutSubCat(int $id)
     {
         if ($this->isAdmin()) {
+            if (Form::validate($_POST, ['titre-sc'])) {
 
+                $titre_sc = htmlspecialchars($_POST['titre-sc']);
+
+                // Augmente les bords droit et gauche de + 2 à partir du bord droit le plus haut des enfants de la catégorie racine (insertion de la sous-catégorie sur la droite)
+                $category = new CategoriesModel;
+                $update_rghtLft = $category->update_rghtLft($id);
+
+                $category_parent = $category->find($id);
+
+                // $sous_categories = new CategoriesModel;
+                // $lft_sc = $category_parent->lft + 1;
+                // $rght_sc = $category_parent->rght - 1;
+                // $parent_id_sc = $category_parent->parent_id;
+                // $level_sc = 1;
+                // // Hydrate la nouvelle sous-catégorie
+                // $sous_categories->setName($titre_sc)
+                //      ->setLft($lft_sc)
+                //      ->setrght($rght_sc)
+                //      ->setParent_id($parent_id_sc)
+                //      ->setLevel($level_sc);
+
+                // Enregistre la catégorie dans la bdd
+                //$sous_categories->create();
+            }
         }
         $this->render('admin/ajoutSubCat', [], 'admin');
     }
