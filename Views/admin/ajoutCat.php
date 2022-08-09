@@ -20,12 +20,12 @@
 -->
 <form method="post" action="#" class="my-5">
     <label for="titre">Titre de la nouvelle catégorie</label>
-    <input class="form-control" type="text" name="titre">
+    <input class="form-control" type="text" name="titre" required>
 
     <p class="text-center bg-info text-white border-info py-2 mt-5">Une nouvelle catégorie contient au minimum une sous-catégorie, vous pourrez en ajouter d'autres par la suite.</p>
 
     <label for="titre-sc">Titre de la sous-catégorie</label>
-    <input class="form-control" type="text" name="titre-sc">
+    <input class="form-control" type="text" name="titre-scRac" required>
 
 
     <button class="btn btn-primary my-4" type="submit" name="validateCateg">Ajouter</button>
