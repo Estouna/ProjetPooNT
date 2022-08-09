@@ -43,10 +43,10 @@ class AdminController extends Controller
         if ($this->isAdmin()) {
 
             // Vérifie que les champs existent et ne sont pas vides (à compléter)
-            if (Form::validate($_POST, ['titre', 'titre-sc'])) {
+            if (Form::validate($_POST, ['titre', 'titre-scRac'])) {
 
                 $titre_cat = htmlspecialchars($_POST['titre']);
-                $titre_sc = htmlspecialchars($_POST['titre-sc']);
+                $titre_sc_rac = htmlspecialchars($_POST['titre-scRac']);
 
                 $categories = new CategoriesModel;
 
@@ -69,12 +69,12 @@ class AdminController extends Controller
                 $sous_categories = new CategoriesModel;
 
                 $parent_id_sc = $sous_categories->findCategoryId_Max();
-                $lft_sc = $sous_categories->findLft_newSubCat();
-                $rght_sc = $sous_categories->findRght_newSubCat();
+                $lft_sc = $sous_categories->findLft_newSubCatRac();
+                $rght_sc = $sous_categories->findRght_newSubCatRac();
                 $level_sc = 1;
 
                 // Hydrate la nouvelle catégorie
-                $sous_categories->setName($titre_sc)
+                $sous_categories->setName($titre_sc_rac)
                     ->setLft($lft_sc[0])
                     ->setrght($rght_sc[0])
                     ->setParent_id($parent_id_sc[0])
@@ -107,27 +107,40 @@ class AdminController extends Controller
 
                 // Augmente les bords droit et gauche de + 2 à partir du bord droit le plus haut des enfants de la catégorie racine (insertion de la sous-catégorie sur la droite)
                 $category = new CategoriesModel;
-                $update_rghtLft = $category->update_rghtLft($id);
+                $category->update_rghtLft($id);
 
-                $category_parent = $category->find($id);
 
-                // $sous_categories = new CategoriesModel;
-                // $lft_sc = $category_parent->lft + 1;
-                // $rght_sc = $category_parent->rght - 1;
-                // $parent_id_sc = $category_parent->parent_id;
-                // $level_sc = 1;
-                // // Hydrate la nouvelle sous-catégorie
-                // $sous_categories->setName($titre_sc)
-                //      ->setLft($lft_sc)
-                //      ->setrght($rght_sc)
-                //      ->setParent_id($parent_id_sc)
-                //      ->setLevel($level_sc);
-
+                $sous_categories = new CategoriesModel;
+                $lft = $sous_categories->findLft_newSubCat($id);
+                $rght = $sous_categories->findRght_newSubCat($id);
+                $parent_id = $sous_categories->findId_cat($id);
+                $level = $sous_categories->findLevel_cat($id);
+                // Hydrate la nouvelle sous-catégorie
+                $sous_categories->setName($titre_sc)
+                    ->setLft($lft[0])
+                    ->setrght($rght[0])
+                    ->setParent_id($parent_id[0])
+                    ->setLevel($level[0]);
                 // Enregistre la catégorie dans la bdd
-                //$sous_categories->create();
+                $sous_categories->create();
+                //var_dump($lft, $rght, $parent_id, $level);
+
+                // On redirige avec un message
+                $_SESSION['success'] = "Votre sous-catégorie a bien été créée";
+                header('Location: /admin/categories');
+                exit;
+            } else {
+                // Message de session
+                $_SESSION['erreur'] = !empty($_POST) ? 'Vous devez donner un titre à la sous-catégorie' : '';
             }
+
+            
         }
-        $this->render('admin/ajoutSubCat', [], 'admin');
+
+        $categoriesModel = new CategoriesModel;
+        $sub_categories = $categoriesModel->findSubCategoriesByParent_id($id);
+        $category = $categoriesModel->find($id);
+        $this->render('admin/ajoutSubCat', compact('sub_categories', 'category'), 'admin');
     }
 
 

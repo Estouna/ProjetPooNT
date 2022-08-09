@@ -26,6 +26,17 @@ class CategoriesModel extends Model
     }
 
     /* 
+       ----------  TROUVER L'ID DE LA CATEGORIE PARENTE ----------
+    */
+    public function findId_cat(int $id)
+    {
+        $id_cat = $this->requete("SELECT id FROM {$this->table} WHERE id = $id")->fetch();
+        $it =  new RecursiveIteratorIterator(new RecursiveArrayIterator($id_cat));
+        $parent_id = iterator_to_array($it, false);
+        return $parent_id;
+    }
+
+    /* 
        ----------  TROUVER LES SOUS-CATEGORIES D'UNE CATEGORIE ----------
     */
     public function findSubCategoriesByParent_id($parent_id)
@@ -75,7 +86,7 @@ class CategoriesModel extends Model
     /* 
        ---------- BORD GAUCHE DE LA SOUS-CATEGORIE DE LA NOUVELLE CATEGORIE RACINE ----------
     */
-    public function findLft_newSubCat()
+    public function findLft_newSubCatRac()
     {
         $lft_catRacine = $this->requete("SELECT MAX(lft + 1) FROM {$this->table}")->fetch();
         $it =  new RecursiveIteratorIterator(new RecursiveArrayIterator($lft_catRacine));
@@ -86,7 +97,7 @@ class CategoriesModel extends Model
     /* 
        ---------- BORD DROIT DE LA SOUS-CATEGORIE DE LA NOUVELLE CATEGORIE RACINE ----------
     */
-    public function findRght_newSubCat()
+    public function findRght_newSubCatRac()
     {
         $lft_catRacine = $this->requete("SELECT MAX(lft + 2) FROM {$this->table}")->fetch();
         $it =  new RecursiveIteratorIterator(new RecursiveArrayIterator($lft_catRacine));
@@ -112,6 +123,39 @@ class CategoriesModel extends Model
         $this->requete("UPDATE {$this->table} SET rght = rght + 2 WHERE rght > $rghtChildMax[0]");
 
         $this->requete("UPDATE {$this->table} SET lft = lft + 2 WHERE lft > $rghtChildMax[0]");
+    }
+
+    /* 
+       ---------- BORD GAUCHE DE LA SOUS-CATEGORIE DE LA NOUVELLE CATEGORIE RACINE ----------
+    */
+    public function findLft_newSubCat($parent_id)
+    {
+        $lft_catParent = $this->requete("SELECT MAX(rght + 1) FROM {$this->table} WHERE parent_id = $parent_id")->fetch();
+        $it =  new RecursiveIteratorIterator(new RecursiveArrayIterator($lft_catParent));
+        $lft_sc = iterator_to_array($it, false);
+        return $lft_sc;
+    }
+
+    /* 
+       ---------- BORD DROIT DE LA SOUS-CATEGORIE DE LA NOUVELLE CATEGORIE RACINE ----------
+    */
+    public function findRght_newSubCat($parent_id)
+    {
+        $lft_catParent = $this->requete("SELECT MAX(rght + 2) FROM {$this->table} WHERE parent_id = $parent_id")->fetch();
+        $it =  new RecursiveIteratorIterator(new RecursiveArrayIterator($lft_catParent));
+        $rght_sc = iterator_to_array($it, false);
+        return $rght_sc;
+    }
+
+    /* 
+       ----------  TROUVER LE LEVEL DE LA SOUS-CATEGORIE ----------
+    */
+    public function findLevel_cat(int $id)
+    {
+        $level = $this->requete("SELECT level + 1 FROM {$this->table} WHERE id = $id")->fetch();
+        $it =  new RecursiveIteratorIterator(new RecursiveArrayIterator($level));
+        $level_sc = iterator_to_array($it, false);
+        return $level_sc;
     }
 
     /* 

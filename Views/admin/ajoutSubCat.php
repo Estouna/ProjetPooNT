@@ -1,4 +1,4 @@
-<h1 class="text-white bg-primary text-center mt-4 mb-5 p-2">Nouvelle sous-catégorie</h1>
+<h1 class="text-white bg-primary text-center mt-4 mb-5 p-2"><?= $category->name ?></h1>
 
 <!-- 
     -------------------------------------------------------- MESSAGES-------------------------------------------------------- 
@@ -22,8 +22,19 @@
 
 
     <label for="titre-sc">Titre de la sous-catégorie</label>
-    <input class="form-control" type="text" name="titre-sc">
+    <input class="form-control" type="text" name="titre-sc" required>
 
 
-    <button class="btn btn-primary my-4" type="submit" name="validateCateg">Ajouter</button>
+    <button class="btn btn-primary my-4" type="submit" name="validateSubCat">Ajouter</button>
 </form>
+
+<?php foreach ($sub_categories as $sc) : ?>
+    <div class="text-center border border-primary my-4 p-2 rounded">
+    <?php if ($sc->rght - $sc->lft !== 1) { ?>
+        <h2><a href="/admin/ajoutSubCat/<?= $sc->id ?>"><?= $sc->name ?></a></h2>   
+        <?php } else { ?>
+            <?= "NE FONCTIONNE PAS ENCORE" ?>
+        <h2><a href="/admin/categories/<?= $sc->id ?>"><?= $sc->name ?></a></h2>
+        <?php } ?>
+    </div>
+<?php endforeach; ?>
