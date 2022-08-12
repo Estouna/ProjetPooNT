@@ -126,7 +126,7 @@ class CategoriesModel extends Model
     }
 
     /* 
-       ---------- BORD GAUCHE DE LA SOUS-CATEGORIE DE LA NOUVELLE CATEGORIE RACINE ----------
+       ---------- BORD GAUCHE DE LA SOUS-CATEGORIE (en sélectionnant le bord droit le plus haut des enfants de la catégorie racine) ----------
     */
     public function findLft_newSubCat($parent_id)
     {
@@ -137,7 +137,7 @@ class CategoriesModel extends Model
     }
 
     /* 
-       ---------- BORD DROIT DE LA SOUS-CATEGORIE DE LA NOUVELLE CATEGORIE RACINE ----------
+       ---------- BORD DROIT DE LA SOUS-CATEGORIE (en sélectionnant le bord droit le plus haut des enfants de la catégorie racine) ----------
     */
     public function findRght_newSubCat($parent_id)
     {
@@ -157,6 +157,43 @@ class CategoriesModel extends Model
         $level_sc = iterator_to_array($it, false);
         return $level_sc;
     }
+
+    /* 
+       ----------  MET A JOUR LES BORD POUR INSERER LA NOUVELLE SOUS CATEGORIE DANS UNE CATEGORIE AU BOUT DE L'ARBRE QUI N'A AUCUN ENFANT (en sélectionnant le bord droit de la catégorie parente) ----------
+    */
+    public function updateRghtLft_forLeafTree(int $id)
+    {
+        $rght_parent = $this->requete("SELECT rght FROM {$this->table} WHERE id = $id")->fetch();
+        $it =  new RecursiveIteratorIterator(new RecursiveArrayIterator($rght_parent));
+        $rght_parentCat = iterator_to_array($it, false);
+        
+        $this->requete("UPDATE {$this->table} SET rght = rght + 2 WHERE rght >= $rght_parentCat[0]");
+
+        $this->requete("UPDATE {$this->table} SET lft = lft + 2 WHERE lft > $rght_parentCat[0]");
+    }
+
+        /* 
+       ---------- BORD GAUCHE DE LA SOUS-CATEGORIE (en sélectionnant le bord gauche de la catégorie parente) ----------
+    */
+    public function findLft_newSubCat_leafTree($id)
+    {
+        $lft_catParent = $this->requete("SELECT lft + 1 FROM {$this->table} WHERE id = $id")->fetch();
+        $it =  new RecursiveIteratorIterator(new RecursiveArrayIterator($lft_catParent));
+        $lft_sc = iterator_to_array($it, false);
+        return $lft_sc;
+    }
+
+    /* 
+       ---------- BORD DROIT DE LA SOUS-CATEGORIE (en sélectionnant le bord gauche de la catégorie parente) ----------
+    */
+    public function findRght_newSubCat_leafTree($id)
+    {
+        $lft_catParent = $this->requete("SELECT lft + 2 FROM {$this->table} WHERE id = $id")->fetch();
+        $it =  new RecursiveIteratorIterator(new RecursiveArrayIterator($lft_catParent));
+        $rght_sc = iterator_to_array($it, false);
+        return $rght_sc;
+    }
+
 
     /* 
         -------------------------------------------------------- GETTERS/SETTERS --------------------------------------------------------

@@ -42,6 +42,13 @@ class Form
         return true;
     }
 
+    public static function valid_donnees($donnees){
+        $donnees = trim($donnees);
+        $donnees = stripslashes($donnees);
+        $donnees = htmlspecialchars($donnees);
+        return $donnees;
+    }
+
     /* 
         -------------------------------------------------------- AJOUT DES ATTRIBUTS --------------------------------------------------------
     */

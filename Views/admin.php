@@ -5,13 +5,13 @@ include_once 'includes/navbarAdmin.php';
 
 <div class="container">
     <?php if (!empty($_SESSION['erreur'])) : ?>
-        <div class="alert alert-danger" role="alert">
+        <div class="alert alert-danger text-center" role="alert">
             <?php echo $_SESSION['erreur'];
             unset($_SESSION['erreur']); ?>
         </div>
     <?php endif; ?>
     <?php if (!empty($_SESSION['message'])) : ?>
-        <div class="alert alert-success" role="alert">
+        <div class="alert alert-success text-center" role="alert">
             <?php echo $_SESSION['message'];
             unset($_SESSION['message']); ?>
         </div>

@@ -24,7 +24,7 @@ class UsersController extends Controller
             if (Form::validate($_POST, ['email', 'password'])) {
                 // Récupère l'utilisateur par son email
                 $userModel = new UsersModel;
-                $userArray = $userModel->findOneByEmail(strip_tags($_POST['email']));
+                $userArray = $userModel->findOneByEmail(htmlspecialchars($_POST['email']));
 
                 // Si l'utilisateur n'existe pas
                 if (!$userArray) {
@@ -72,9 +72,9 @@ class UsersController extends Controller
         // Exemple: $form->debutForm('get', 'login.php', ['class' => 'form', 'id' => 'loginForm'])
         $form->debutForm('post', '#', ['class' => 'w-75'])
             ->ajoutLabelFor('email', 'E-mail :', ['class' => 'text-primary'])
-            ->ajoutInput('email', 'email', ['class' => 'form-control', 'id' => 'email'])
+            ->ajoutInput('email', 'email', ['class' => 'form-control', 'id' => 'email', 'required' => 'true'])
             ->ajoutLabelFor('password', 'Mot de passe :', ['class' => 'text-primary'])
-            ->ajoutInput('password', 'password', ['class' => 'form-control', 'id' => 'password'])
+            ->ajoutInput('password', 'password', ['class' => 'form-control', 'id' => 'password', 'required' => 'true'])
             ->debutDiv(['class' => 'text-center mt-3'])
             ->ajoutBouton('Me connecter', ['type' => 'submit', 'name' => 'validateLog', 'class' => 'btn btn-primary my-4'])
             ->finDiv()
@@ -99,24 +99,26 @@ class UsersController extends Controller
             // Vérifie si le formulaire est valide
             if (Form::validate($_POST, ['email', 'password'])) {
                 // Nettoie l'adresse mail
-                $email = strip_tags($_POST['email']);
+                $email = htmlspecialchars($_POST['email']);
 
-                // Hash le mot de passe (ARGON2I à partir de PHP 7.2)
-                $pass = password_hash($_POST['password'], PASSWORD_ARGON2I);
+                if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    // Hash le mot de passe (ARGON2I à partir de PHP 7.2)
+                    $pass = password_hash($_POST['password'], PASSWORD_ARGON2I);
 
-                // Hydrate l'utilisateur
-                $user = new UsersModel;
-                $user->setEmail($email)
-                    ->setPassword($pass)
-                    ->setRoles(json_encode('["ROLE_USER"]'));
+                    // Hydrate l'utilisateur
+                    $user = new UsersModel;
+                    $user->setEmail($email)
+                        ->setPassword($pass)
+                        ->setRoles(json_encode('["ROLE_USER"]'));
 
-                // Enregistre l'utilisateur dans la bdd
-                $user->create();
+                    // Enregistre l'utilisateur dans la bdd
+                    $user->create();
 
-                // On redirige avec un message
-                $_SESSION['success'] = "Merci et bienvenue";
-                header('Location: /');
-                exit;
+                    // On redirige avec un message
+                    $_SESSION['success'] = "Merci et bienvenue";
+                    header('Location: /');
+                    exit;
+                }
             } else {
                 $_SESSION['erreur'] = !empty($_POST) ? 'Tous les champs doivent être remplis' : '';
                 header('Location: /users/register');
@@ -130,9 +132,9 @@ class UsersController extends Controller
         // Formulaire
         $form->debutForm('post', '#', ['class' => 'w-75'])
             ->ajoutLabelFor('email', 'E-mail :', ['class' => 'text-primary'])
-            ->ajoutInput('email', 'email', ['class' => 'form-control', 'id' => 'email'])
+            ->ajoutInput('email', 'email', ['class' => 'form-control', 'id' => 'email', 'required' => 'true'])
             ->ajoutLabelFor('pass', 'Mot de passe :', ['class' => 'text-primary'])
-            ->ajoutInput('password', 'password', ['class' => 'form-control', 'id' => 'pass'])
+            ->ajoutInput('password', 'password', ['class' => 'form-control', 'id' => 'pass', 'required' => 'true'])
             ->debutDiv(['class' => 'text-center mt-3'])
             ->ajoutBouton('M\'inscrire', ['type' => 'submit', 'name' => 'validateReg', 'class' => 'btn btn-primary my-4'])
             ->finDiv()

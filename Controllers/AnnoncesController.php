@@ -59,8 +59,8 @@ class AnnoncesController extends Controller
             // Vérifie que les champs existent et ne sont pas vides (à compléter)
             if (Form::validate($_POST, ['titre', 'description'])) {
                 // Sécurise les données
-                $titre = strip_tags($_POST['titre']);
-                $description = strip_tags($_POST['description']);
+                $titre = Form::valid_donnees($_POST['titre']);
+                $description = htmlspecialchars($_POST['description']);
 
                 // Instancie le modèle des annonces
                 $annonce = new AnnoncesModel;
@@ -82,8 +82,8 @@ class AnnoncesController extends Controller
                 $_SESSION['erreur'] = !empty($_POST) ? 'Vous devez remplir tous les champs' : '';
 
                 // Laisse le texte entré
-                $titre = isset($_POST['titre']) ? strip_tags($_POST['titre']) : '';
-                $description = isset($_POST['description']) ? strip_tags($_POST['description']) : '';
+                $titre = isset($_POST['titre']) ? htmlspecialchars($_POST['titre']) : '';
+                $description = isset($_POST['description']) ? htmlspecialchars($_POST['description']) : '';
             }
 
 
@@ -94,10 +94,11 @@ class AnnoncesController extends Controller
                 ->ajoutLabelFor('titre', 'Titre de l\'annonce :')
                 ->ajoutInput('text', 'titre', [
                     'class' => 'form-control',
-                    'value' => $titre
+                    'value' => $titre,
+                    'required' => 'true'
                 ])
                 ->ajoutLabelFor('description', 'Texte de l\'annonce :')
-                ->ajoutTextarea('description', $description, ['class' => 'form-control'])
+                ->ajoutTextarea('description', $description, ['class' => 'form-control', 'required' => 'true'])
                 ->ajoutBouton('Publier', ['type' => 'submit', 'name' => 'validatePubli', 'class' => 'btn btn-primary my-4'])
                 ->finForm();
 
@@ -147,8 +148,9 @@ class AnnoncesController extends Controller
             // Vérifie que les champs existent et ne sont pas vides (à compléter)
             if (Form::validate($_POST, ['titre', 'description'])) {
                 // Sécurise les données
-                $titre = strip_tags($_POST['titre']);
-                $description = strip_tags($_POST['description']);
+                $titre = Form::valid_donnees($_POST['titre']);
+                $description = htmlspecialchars($_POST['description']);
+
 
                 // Instancie le modèle des annonces
                 $annonceModif = new AnnoncesModel;
