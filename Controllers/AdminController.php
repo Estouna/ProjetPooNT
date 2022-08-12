@@ -5,8 +5,6 @@ namespace App\Controllers;
 use App\Models\AnnoncesModel;
 use App\Models\CategoriesModel;
 use App\Core\Form;
-use RecursiveArrayIterator;
-use RecursiveIteratorIterator;
 
 class AdminController extends Controller
 {
@@ -101,29 +99,55 @@ class AdminController extends Controller
     public function ajoutSubCat(int $id)
     {
         if ($this->isAdmin()) {
+
+            $categoriesModel = new CategoriesModel;
+            $sub_categories = $categoriesModel->findSubCategoriesByParent_id($id);
+            $categories = $categoriesModel->find($id);
+            // var_dump($categories);
+
             if (Form::validate($_POST, ['titre-sc'])) {
+
 
                 $titre_sc = htmlspecialchars($_POST['titre-sc']);
 
-                // Augmente les bords droit et gauche de + 2 à partir du bord droit le plus haut des enfants de la catégorie racine (insertion de la sous-catégorie sur la droite)
-                $category = new CategoriesModel;
-                $category->update_rghtLft($id);
-
-
                 $sous_categories = new CategoriesModel;
-                $lft = $sous_categories->findLft_newSubCat($id);
-                $rght = $sous_categories->findRght_newSubCat($id);
+
+                if ($categories->rght - $categories->lft >= 3) {
+                    // Augmente les bords droit et gauche de + 2 à partir du bord droit le plus haut des enfants de la catégorie racine (insertion de la sous-catégorie sur la droite)
+                    $update_rghtLft = $categoriesModel->update_rghtLft($id);
+
+                    $lft = $sous_categories->findLft_newSubCat($id);
+                    $rght = $sous_categories->findRght_newSubCat($id);
+                }
+
+                if ($categories->rght - $categories->lft < 3) {
+
+                    $annonces = new AnnoncesModel;
+                    $annoncesExist = $annonces->findAllByCategoryId($id);
+                    if (empty($annoncesExist)) {
+                        // Augmente les bords droit et gauche de + 2 à partir du bord droit de la catégorie parente
+                        $update_forLeafTree = $categoriesModel->updateRghtLft_forLeafTree($id);
+                    } else {
+                        $_SESSION['erreur'] = 'Vous devez déplacer les articles de cette catégorie avant de pouvoir ajouter une sous-catégorie';
+                    }
+
+                    $lft = $sous_categories->findLft_newSubCat_leafTree($id);
+                    $rght = $sous_categories->findRght_newSubCat_leafTree($id);
+                }
+
+
                 $parent_id = $sous_categories->findId_cat($id);
                 $level = $sous_categories->findLevel_cat($id);
+
                 // Hydrate la nouvelle sous-catégorie
                 $sous_categories->setName($titre_sc)
                     ->setLft($lft[0])
                     ->setrght($rght[0])
                     ->setParent_id($parent_id[0])
                     ->setLevel($level[0]);
+
                 // Enregistre la catégorie dans la bdd
                 $sous_categories->create();
-                //var_dump($lft, $rght, $parent_id, $level);
 
                 // On redirige avec un message
                 $_SESSION['success'] = "Votre sous-catégorie a bien été créée";
@@ -133,14 +157,9 @@ class AdminController extends Controller
                 // Message de session
                 $_SESSION['erreur'] = !empty($_POST) ? 'Vous devez donner un titre à la sous-catégorie' : '';
             }
-
-            
         }
 
-        $categoriesModel = new CategoriesModel;
-        $sub_categories = $categoriesModel->findSubCategoriesByParent_id($id);
-        $category = $categoriesModel->find($id);
-        $this->render('admin/ajoutSubCat', compact('sub_categories', 'category'), 'admin');
+        $this->render('admin/ajoutSubCat', compact('sub_categories', 'categories'), 'admin');
     }
 
 
