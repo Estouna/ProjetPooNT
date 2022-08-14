@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\AnnoncesModel;
 use App\Core\Form;
+use App\Models\CategoriesModel;
 
 class AnnoncesController extends Controller
 {
@@ -51,24 +52,30 @@ class AnnoncesController extends Controller
      * Ajouter une annonce
      * @return void
      */
-    public function ajouter()
+    public function ajouter(int $id)
     {
         // Vérifie si la session contient les informations d'un utilisateur
         if (isset($_SESSION['user']) && !empty($_SESSION['user']['id'])) {
-
+            
+            
             // Vérifie que les champs existent et ne sont pas vides (à compléter)
             if (Form::validate($_POST, ['titre', 'description'])) {
                 // Sécurise les données
                 $titre = Form::valid_donnees($_POST['titre']);
                 $description = htmlspecialchars($_POST['description']);
+                
+                $categoriesModel = new CategoriesModel;
+                $id_cat = $categoriesModel->findId_cat($id);
 
                 // Instancie le modèle des annonces
                 $annonce = new AnnoncesModel;
-
+                
                 // Hydrate l'annonce
                 $annonce->setTitre($titre)
                     ->setDescription($description)
-                    ->setUsers_id($_SESSION['user']['id']);
+                    ->setUsers_id($_SESSION['user']['id'])
+                    ->setPseudo_author($_SESSION['user']['pseudo'])
+                    ->setCategories_id($id_cat[0]);
 
                 // Enregistre l'annonce dans la bdd
                 $annonce->create();

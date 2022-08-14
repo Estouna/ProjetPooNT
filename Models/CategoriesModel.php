@@ -26,6 +26,14 @@ class CategoriesModel extends Model
     }
 
     /* 
+       ----------  TROUVER LES CATEGORIES AU BOUT DE L'ARBRE (les feuilles) ----------
+    */
+    public function findLeaf_tree()
+    {
+        return $this->requete("SELECT * FROM {$this->table} WHERE rght - lft = 1")->fetchAll();
+    }
+
+    /* 
        ----------  TROUVER L'ID DE LA CATEGORIE PARENTE ----------
     */
     public function findId_cat(int $id)

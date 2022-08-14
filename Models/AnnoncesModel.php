@@ -10,6 +10,7 @@ class AnnoncesModel extends Model
     protected $created_at;
     protected $actif;
     protected $users_id;
+    protected $pseudo_author;
     protected $categories_id;
 
     /* 
@@ -140,8 +141,8 @@ class AnnoncesModel extends Model
 
     /**
      * Get the value of users_id
-     */ 
-    public function getUsers_id():int
+     */
+    public function getUsers_id(): int
     {
         return $this->users_id;
     }
@@ -149,7 +150,7 @@ class AnnoncesModel extends Model
     /**
      * Set the value of users_id
      * @return  self
-     */ 
+     */
     public function setUsers_id(int $users_id)
     {
         $this->users_id = $users_id;
@@ -158,9 +159,29 @@ class AnnoncesModel extends Model
     }
 
     /**
+     * Get the value of pseudo_author
+     */
+    public function getPseudo_author()
+    {
+        return $this->pseudo_author;
+    }
+
+    /**
+     * Set the value of pseudo_author
+     *
+     * @return  self
+     */
+    public function setPseudo_author($pseudo_author)
+    {
+        $this->pseudo_author = $pseudo_author;
+
+        return $this;
+    }
+
+    /**
      * Get the value of categories_id
-     */ 
-    public function getCategories_id():int
+     */
+    public function getCategories_id(): int
     {
         return $this->categories_id;
     }
@@ -169,7 +190,7 @@ class AnnoncesModel extends Model
      * Set the value of categories_id
      *
      * @return  self
-     */ 
+     */
     public function setCategories_id(int $categories_id)
     {
         $this->categories_id = $categories_id;

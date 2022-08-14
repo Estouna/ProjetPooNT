@@ -30,7 +30,6 @@ class Form
     {
         // Parcourt les champs
         foreach ($fields as $field) {
-
             // Vérifie si le champ est absent ou vide dans le formulaire
             if (!isset($form[$field]) || empty($form[$field])) {
                 // Sort dès le premier champ non validé
