@@ -35,7 +35,7 @@ class CategoriesController extends Controller
     {
         $categoriesModel = new CategoriesModel;
 
-        $sub_categories = $categoriesModel->findSubCategoriesByParent_id($parent_id);
+        $sub_categories = $categoriesModel->findBy(['parent_id' => $parent_id]); 
 
         $this->render('categories/sous_categories', compact('sub_categories'));
     }
@@ -48,7 +48,7 @@ class CategoriesController extends Controller
     { 
         $annoncesModel = new AnnoncesModel;
         
-        $annonces = $annoncesModel->findAllByCategoryId($id_category);
+        $annonces = $annoncesModel->findBy(['actif' => 1, 'categories_id' => $id_category]); 
         
         $this->render('categories/annonces', compact('annonces'));
     }

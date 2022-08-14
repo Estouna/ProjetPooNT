@@ -47,7 +47,7 @@ class AdminController extends Controller
                 $titre_sc_rac = htmlspecialchars($_POST['titre-scRac']);
 
                 $categories = new CategoriesModel;
-
+                // Récupère le bord droit le plus haut de la table des catégories
                 $lft_cat = $categories->findLft_newCatRacine();
                 $rght_cat = $categories->findRght_newCatRacineForOneSubCat();
                 $parent_id_cat = 0;

@@ -5,6 +5,7 @@ namespace App\Models;
 class UsersModel extends Model
 {
     protected $id;
+    protected $pseudo;
     protected $email;
     protected $password;
     protected $roles;
@@ -24,7 +25,7 @@ class UsersModel extends Model
     */
 
     /* 
-       ----------  TROUVER UN UTILISATEUR PAR SON EMAIL  ----------
+       ----------  TROUVER UN UTILISATEUR PAR SON EMAIL OU VERIFIER SI L'EMAIL EXISTE  ----------
     */
     /**
      * Récupère un utilisateur à partir de son email
@@ -37,8 +38,21 @@ class UsersModel extends Model
     }
 
     /* 
-       ----------  SESSION UTILISATEUR  ----------
+       ----------  VERIFIER SI LE PSEUDO EXISTE DEJA DANS LA BDD ----------
     */
+    /**
+     * Récupère un utilisateur à partir de son email
+     * @param string $email
+     * @return mixed
+     */
+    public function checkIfPseudoAlreadyExists(string $pseudo)
+    {
+        return $this->requete("SELECT pseudo FROM {$this->table} WHERE pseudo = ?", [$pseudo])->fetch();
+    }
+
+    /* 
+       ----------  SESSION UTILISATEUR  ----------
+       */
     /**
      * Crée la session de l'utilisateur
      * @return void
@@ -47,6 +61,7 @@ class UsersModel extends Model
     {
         $_SESSION['user'] = [
             'id' => $this->id,
+            'pseudo' => $this->pseudo,
             'email' => $this->email,
             'roles' => $this->roles
         ];
@@ -54,7 +69,7 @@ class UsersModel extends Model
 
     /* 
         -------------------------------------------------------- GETTERS/SETTERS --------------------------------------------------------
-    */
+        */
     /**
      * Get the value of id
      */
@@ -71,6 +86,26 @@ class UsersModel extends Model
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of pseudo
+     */
+    public function getPseudo()
+    {
+        return $this->pseudo;
+    }
+
+    /**
+     * Set the value of pseudo
+     *
+     * @return  self
+     */
+    public function setPseudo($pseudo)
+    {
+        $this->pseudo = $pseudo;
 
         return $this;
     }
@@ -121,7 +156,7 @@ class UsersModel extends Model
      * Get the value of roles
      * @return array
      */
-    public function getRoles():array
+    public function getRoles(): array
     {
         // Récupère les rôles qui ont été donnés
         $roles = $this->roles;

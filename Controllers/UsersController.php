@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Core\Form;
 use App\Models\UsersModel;
 use App\Models\AnnoncesModel;
+use App\Models\CategoriesModel;
 
 
 class UsersController extends Controller
@@ -97,27 +98,54 @@ class UsersController extends Controller
 
         if (isset($_POST['validateReg'])) {
             // Vérifie si le formulaire est valide
-            if (Form::validate($_POST, ['email', 'password'])) {
-                // Nettoie l'adresse mail
+            if (Form::validate($_POST, ['pseudo', 'email', 'password'])) {
+
+                $user = new UsersModel;
+
+                $pseudo = Form::valid_donnees($_POST['pseudo']);
                 $email = htmlspecialchars($_POST['email']);
+                
+                $pseudolength = strlen($pseudo);
+                if ($pseudolength > 0 && $pseudolength <= 20){
 
-                if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                    // Hash le mot de passe (ARGON2I à partir de PHP 7.2)
-                    $pass = password_hash($_POST['password'], PASSWORD_ARGON2I);
+                    $verif_pseudo = $user->checkIfPseudoAlreadyExists($pseudo);
+                    if ($verif_pseudo) {
+                        // http_response_code(404);
+                        $_SESSION['erreur'] = 'Ce pseudo existe déjà';
+                        header('Location: /users/register');
+                        exit;
+                    }
+                    
+                    if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
-                    // Hydrate l'utilisateur
-                    $user = new UsersModel;
-                    $user->setEmail($email)
-                        ->setPassword($pass)
-                        ->setRoles(json_encode('["ROLE_USER"]'));
+                        $verif_email = $user->findOneByEmail($email);
+                        if ($verif_email) {
+                            // http_response_code(404);
+                            $_SESSION['erreur'] = 'Cet email existe déjà';
+                            header('Location: /users/register');
+                            exit;
+                        }
 
-                    // Enregistre l'utilisateur dans la bdd
-                    $user->create();
+                        // Hash le mot de passe (ARGON2I à partir de PHP 7.2)
+                        $pass = password_hash($_POST['password'], PASSWORD_ARGON2I);
 
-                    // On redirige avec un message
-                    $_SESSION['success'] = "Merci et bienvenue";
-                    header('Location: /');
-                    exit;
+                        // Hydrate l'utilisateur
+                        $user->setPseudo($pseudo)
+                            ->setEmail($email)
+                            ->setPassword($pass)
+                            ->setRoles(json_encode('["ROLE_USER"]'));
+                        // Enregistre l'utilisateur dans la bdd
+                        $user->create();
+
+                        // On redirige avec un message
+                        $_SESSION['success'] = "Merci et bienvenue";
+                        header('Location: /');
+                        exit;
+                    } else {
+                        $_SESSION['erreur'] = "Votre adresse mail n'est pas valide";
+                    }
+                } else {
+                    $_SESSION['erreur'] = "Votre pseudo doit contenir entre 1 et 20 caractères";
                 }
             } else {
                 $_SESSION['erreur'] = !empty($_POST) ? 'Tous les champs doivent être remplis' : '';
@@ -131,6 +159,8 @@ class UsersController extends Controller
 
         // Formulaire
         $form->debutForm('post', '#', ['class' => 'w-75'])
+            ->ajoutLabelFor('pseudo', 'Pseudo :', ['class' => 'text-primary'])
+            ->ajoutInput('text', 'pseudo', ['class' => 'form-control', 'id' => 'pseudo', 'required' => 'true'])
             ->ajoutLabelFor('email', 'E-mail :', ['class' => 'text-primary'])
             ->ajoutInput('email', 'email', ['class' => 'form-control', 'id' => 'email', 'required' => 'true'])
             ->ajoutLabelFor('pass', 'Mot de passe :', ['class' => 'text-primary'])
@@ -165,10 +195,10 @@ class UsersController extends Controller
     public function profil()
     {
         if ($this->isUser()) {
-            $this->render('users/profil');
-        } else {
-            header('Location: /users/login');
-            exit;
+            $categoriesModel = new CategoriesModel;
+            $categories = $categoriesModel->findLeaf_tree();
+
+            $this->render('users/profil', compact('categories'));
         }
     }
 

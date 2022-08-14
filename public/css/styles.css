@@ -1,3 +1,7 @@
 /* body{
     background-color: rgb(0, 0, 0);
 } */
+
+.fT-Resp{
+    font-size : max(1vw, 12px)
+}
