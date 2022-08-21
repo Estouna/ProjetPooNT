@@ -103,63 +103,71 @@ class AdminController extends Controller
             $categoriesModel = new CategoriesModel;
             $sub_categories = $categoriesModel->findSubCategoriesByParent_id($id);
             $categories = $categoriesModel->find($id);
-            // var_dump($categories);
 
-            if (Form::validate($_POST, ['titre-sc'])) {
+            $annonces = new AnnoncesModel;
+            $all_annonces = $annonces->findAll();
+            $annoncesExist = $annonces->findAllByCategoryId($id);
+
+            // Tableau avec les id des catégories existant dans la table annonces
+            $idCat_annonces = [];
+            foreach ($all_annonces as $ann) {
+                array_push($idCat_annonces, $ann->categories_id);
+            }
+            $idCat_ann = array_unique($idCat_annonces);
+
+            if (empty($annoncesExist)) {
+
+                if (Form::validate($_POST, ['titre-sc'])) {
 
 
-                $titre_sc = htmlspecialchars($_POST['titre-sc']);
+                    $titre_sc = htmlspecialchars($_POST['titre-sc']);
 
-                $sous_categories = new CategoriesModel;
+                    $sous_categories = new CategoriesModel;
 
-                if ($categories->rght - $categories->lft >= 3) {
-                    // Augmente les bords droit et gauche de + 2 à partir du bord droit le plus haut des enfants de la catégorie racine (insertion de la sous-catégorie sur la droite)
-                    $update_rghtLft = $categoriesModel->update_rghtLft($id);
-
-                    $lft = $sous_categories->findLft_newSubCat($id);
-                    $rght = $sous_categories->findRght_newSubCat($id);
-                }
-
-                if ($categories->rght - $categories->lft < 3) {
-
-                    $annonces = new AnnoncesModel;
-                    $annoncesExist = $annonces->findAllByCategoryId($id);
-                    if (empty($annoncesExist)) {
-                        // Augmente les bords droit et gauche de + 2 à partir du bord droit de la catégorie parente
-                        $update_forLeafTree = $categoriesModel->updateRghtLft_forLeafTree($id);
-                    } else {
-                        $_SESSION['erreur'] = 'Vous devez déplacer les articles de cette catégorie avant de pouvoir ajouter une sous-catégorie';
+                    if ($categories->rght - $categories->lft >= 3) {
+                        // Augmente les bords droit et gauche de + 2 à partir du bord droit le plus haut des enfants de la catégorie racine (insertion de la sous-catégorie sur la droite)
+                        $update_rghtLft = $categoriesModel->update_rghtLft($id);
+                        $lft = $sous_categories->findLft_newSubCat($id);
+                        $rght = $sous_categories->findRght_newSubCat($id);
                     }
 
-                    $lft = $sous_categories->findLft_newSubCat_leafTree($id);
-                    $rght = $sous_categories->findRght_newSubCat_leafTree($id);
+                    if ($categories->rght - $categories->lft < 3) {
+                        // Augmente les bords droit et gauche de + 2 à partir du bord droit de la catégorie parente
+                        $update_forLeafTree = $categoriesModel->updateRghtLft_forLeafTree($id);
+                        $lft = $sous_categories->findLft_newSubCat_leafTree($id);
+                        $rght = $sous_categories->findRght_newSubCat_leafTree($id);
+                    }
+
+
+                    $parent_id = $sous_categories->findId_cat($id);
+                    $level = $sous_categories->findLevel_cat($id);
+
+                    // Hydrate la nouvelle sous-catégorie
+                    $sous_categories->setName($titre_sc)
+                        ->setLft($lft[0])
+                        ->setrght($rght[0])
+                        ->setParent_id($parent_id[0])
+                        ->setLevel($level[0]);
+
+                    // Enregistre la catégorie dans la bdd
+                    $sous_categories->create();
+
+                    // On redirige avec un message
+                    $_SESSION['success'] = "Votre sous-catégorie a bien été créée";
+                    header('Location: /admin/categories');
+                    exit;
+                } else {
+                    // Message de session
+                    $_SESSION['erreur'] = !empty($_POST) ? 'Vous devez donner un titre à la sous-catégorie' : '';
                 }
-
-
-                $parent_id = $sous_categories->findId_cat($id);
-                $level = $sous_categories->findLevel_cat($id);
-
-                // Hydrate la nouvelle sous-catégorie
-                $sous_categories->setName($titre_sc)
-                    ->setLft($lft[0])
-                    ->setrght($rght[0])
-                    ->setParent_id($parent_id[0])
-                    ->setLevel($level[0]);
-
-                // Enregistre la catégorie dans la bdd
-                $sous_categories->create();
-
-                // On redirige avec un message
-                $_SESSION['success'] = "Votre sous-catégorie a bien été créée";
+            } else {
+                $_SESSION['erreur'] = 'Vous devez déplacer les articles de cette catégorie avant de pouvoir ajouter une sous-catégorie';
                 header('Location: /admin/categories');
                 exit;
-            } else {
-                // Message de session
-                $_SESSION['erreur'] = !empty($_POST) ? 'Vous devez donner un titre à la sous-catégorie' : '';
             }
         }
 
-        $this->render('admin/ajoutSubCat', compact('sub_categories', 'categories'), 'admin');
+        $this->render('admin/ajoutSubCat', compact('sub_categories', 'categories', 'idCat_ann'), 'admin');
     }
 
 
@@ -173,11 +181,16 @@ class AdminController extends Controller
     public function annonces()
     {
         if ($this->isAdmin()) {
-            $annoncesModel = new AnnoncesModel;
 
+            // Catégorie contenant des annonces à déplacer
+            $categoriesModel = new CategoriesModel;
+            $categories_origin = $categoriesModel->findLeaf_tree();
+
+            // Liste des annonces à modifier
+            $annoncesModel = new AnnoncesModel;
             $annonces = $annoncesModel->findAll();
 
-            $this->render('admin/annonces', compact('annonces'), 'admin');
+            $this->render('admin/annonces', compact('annonces', 'categories_origin'), 'admin');
         }
     }
 
@@ -222,6 +235,49 @@ class AdminController extends Controller
 
                 $annonce->update();
             }
+        }
+    }
+
+    /* 
+        -------------------------------------------------------- DEPLACER LES ANNONCES D'UNE CATEGORIE --------------------------------------------------------
+    */
+    public function deplacerAnnonces(int $id)
+    {
+        if ($this->isAdmin()) {
+
+            // Récupère les annonces de la catégorie
+            $annoncesModel = new AnnoncesModel;
+            $annonces_categorie = $annoncesModel->findby(['categories_id' => $id]);
+
+            // Catégories cible pour les annonces à déplacer
+            $categoriesModel = new CategoriesModel;
+            $categories_cible = $categoriesModel->findLeaf_tree();
+            $categorie =  $categoriesModel->find($id);
+
+
+            if (!empty($annonces_categorie)) {
+
+                if (Form::validate($_POST, ['categories'])) {
+
+                    $id_cat_cible = intval($_POST['categories']);
+
+                    $annoncesModif = new AnnoncesModel;
+                    foreach ($annonces_categorie as $ac) {
+                        $annoncesModif->setId($ac->id)
+                            ->setCategories_id($id_cat_cible);
+                        $annoncesModif->update();
+                    }
+
+                    $_SESSION['success'] = "Les articles ont bien été déplacés";
+                    header('Location: /admin/annonces');
+                    exit;
+                }
+            } else {
+                $_SESSION['erreur'] = 'Il n\'y a pas d\'annonces dans cette catégorie';
+            }
+
+            // Sans compact(): $this->render('annonces/index', ['annonces' => $annonces]);
+            $this->render('admin/deplacerAnnonces', compact('categories_cible', 'annonces_categorie', 'categorie'), 'admin');
         }
     }
 

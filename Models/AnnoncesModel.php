@@ -42,6 +42,19 @@ class AnnoncesModel extends Model
     }
 
     /* 
+       ----------  TROUVER LES ANNONCES D'UNE CATEGORIE ----------
+    */
+    public function findAllByCategoryIdFetch(int $category_id)
+    {
+        return $this->requete("SELECT * FROM {$this->table} WHERE categories_id = $category_id")->fetchAll();
+    }
+
+    public function updateCategoriesId()
+    {
+        return $this->requete("UPDATE {$this->table} SET categories_id WHERE id = ?");
+    }
+
+    /* 
         -------------------------------------------------------- GETTERS/SETTERS --------------------------------------------------------
     */
     /**

@@ -1,8 +1,10 @@
 <h1 class="text-primary text-center my-5">Mon profil</h1>
-<h2 class="text-center my-5">Publier une annonce</h2>
+
+<h2 class="text-center my-5">Publier une annonce dans :</h2>
+
 <div class="row justify-content-center p-1">
     <?php foreach ($categories as $category) : ?>
-        <div class="text-center border border-primary my-2 rounded col-sm-5 col-md-4 col-lg-4">
+        <div class="text-center border border-primary m-1 rounded col-sm-4 col-md-3 col-lg-3">
             <h3><a href="/annonces/ajouter/<?= $category->id ?>" class="fT-Resp"><?= $category->name ?></a></h3>
         </div>
     <?php endforeach; ?>

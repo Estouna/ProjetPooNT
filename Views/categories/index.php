@@ -7,17 +7,22 @@
     <?php foreach ($categories as $category) : ?>
 
         <div class="col-lg-3 col-md-4 col-sm-5 text-center m-2 py-4">
-            <h2><a href="/categories/sous_categories/<?= $category->id ?>"><?= $category->name ?></a></h2>
+            <div class="bg-primary text-white p-1">
+                <h2><a class="text-white" href="/categories/sous_categories/<?= $category->id ?>"><?= $category->name ?></a></h2>
+            </div>
             <?php foreach ($subCat as $sc) : ?>
-
                 <?php if (isset($category->id) && $sc->parent_id === $category->id) : ?>
 
                     <?php if ($sc->rght - $sc->lft !== 1) { ?>
-                        <p><a href="/categories/sous_categories/<?= $sc->id ?>"><?= $sc->name ?></a></p>
+                        <div class="border border-top-none bg-light">
+                            <p class="p-1 mt-1"><a href="/categories/sous_categories/<?= $sc->id ?>"><?= $sc->name ?></a></p>
+                        </div>
                     <?php } else { ?>
-                        <p><a class="text-dark" href="/categories/annonces/<?= $sc->id ?>"><?= $sc->name ?></a></p>
+                        <div class="border border-top-none bg-light">
+                            <p class="p-1 mt-1"><a class="text-dark" href="/categories/annonces/<?= $sc->id ?>"><?= $sc->name ?></a></p>
+                        </div>
                     <?php } ?>
-                    
+
                 <?php endif; ?>
 
             <?php endforeach; ?>

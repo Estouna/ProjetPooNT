@@ -180,7 +180,7 @@ class CategoriesModel extends Model
         $this->requete("UPDATE {$this->table} SET lft = lft + 2 WHERE lft > $rght_parentCat[0]");
     }
 
-        /* 
+    /* 
        ---------- BORD GAUCHE DE LA SOUS-CATEGORIE (en sélectionnant le bord gauche de la catégorie parente) ----------
     */
     public function findLft_newSubCat_leafTree($id)
