@@ -1,5 +1,40 @@
+<h1 class="text-white bg-primary text-center mt-4 mb-5 p-2">Gestion des annonces</h1>
+
+<!-- 
+    -------------------------------------------------------- MESSAGES -------------------------------------------------------- 
+-->
+<?php if (!empty($_SESSION['erreur'])) : ?>
+    <div class="alert alert-danger text-center" role="alert">
+        <?php
+        echo $_SESSION['erreur'];
+        unset($_SESSION['erreur']);
+        ?>
+    </div>
+<?php endif; ?>
+<?php if (!empty($_SESSION['success'])) : ?>
+    <div class="alert alert-success text-center" role="alert">
+        <?php
+        echo $_SESSION['success'];
+        unset($_SESSION['success']);
+        ?>
+    </div>
+<?php endif; ?>
+
+<h2 class="text-primary text-center py-3 my-5">Déplacer tous les articles d'une catégorie :</h2>
+<p class="text-center bg-info text-white border-info py-2 mt-5">Choisissez la catégorie qui contient les articles que vous souhaitez déplacer :</p>
+
+<div class="row justify-content-center p-1">
+    <?php foreach ($categories_origin as $category) : ?>
+        <div class="text-center border border-primary m-1 rounded col-lg-3 col-md-4 col-sm-5 rounded">
+            <h3><a href="/admin/deplacerAnnonces/<?= $category->id ?>" class="fT-Resp"><?= $category->name ?></a></h3>
+        </div>
+    <?php endforeach; ?>
+</div>
+
+<h2 class="text-primary text-center border-top border-primary py-3 my-5">Gérer les articles individuellement :</h2>
+
 <div class="table-responsive table-sm mt-5">
-<table class="table table-dark table-striped fT-Resp">
+<table class="table table-dark table-striped">
     <thead>
         <th>ID</th>
         <th>Auteur</th>
@@ -19,9 +54,10 @@
                         <label class="custom-control-label" for="customSwitch<?= $annonce->id ?>"></label>
                     </div>
                 </td>
-                <td class="fT-Resp">
-                    <a href="/annonces/modifier/<?= $annonce->id ?>" class="btn btn-warning fT-Resp col-sm-5">Modifier</a>
-                    <a href="/admin/supprimeAnnonce/<?= $annonce->id ?>" class="btn btn-danger fT-Resp col-sm-6" onclick='return confirm(" Cette action est irréversible, êtes-vous sûr ? ")'>Supprimer</a>
+                <td class="p-1">
+                    <a href="/annonces/modifier/<?= $annonce->id ?>" class="btn btn-warning fT-Resp col-sm-3 col-md-8 col-lg-3 m-1">Modifier</a>
+                    <a href="#"<?= $annonce->id ?>" class="btn btn-warning fT-Resp col-md-8 col-lg-3 m-1">Déplacer</a>
+                    <a href="/admin/supprimeAnnonce/<?= $annonce->id ?>" class="btn btn-danger fT-Resp col-md-8 col-lg-4 m-1" onclick='return confirm(" Cette action est irréversible, êtes-vous sûr ? ")'>Supprimer</a>
                 </td>
             </tr>
         <?php endforeach; ?>

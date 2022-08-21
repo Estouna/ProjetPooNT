@@ -22,11 +22,21 @@
 
             <ul class="navbar-nav ml-auto">
                 <?php if (isset($_SESSION['user']) && !empty($_SESSION['user']['id'])) : ?>
+
                     <?php if (isset($_SESSION['user']['roles']) && in_array('ROLE_ADMIN', $_SESSION['user']['roles'])) : ?>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/admin">Admin</a>
-                        </li>
+                        <div class="dropdown">
+                            <button class="btn text-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                                Admin
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item text-black-50" href="/admin">Accueil</a>
+                                <a class="dropdown-item text-black-50" href="/admin/categories">Gestion catégories</a>
+                                <a class="dropdown-item text-black-50" href="/admin/annonces">Gestion annonces</a>
+                                <a class="dropdown-item text-black-50" href="/admin/users">Gestion utilisateurs</a>
+                            </div>
+                        </div>
                     <?php endif; ?>
+
                     <li class="nav-item">
                         <a class="nav-link" href="/users/profil">Profil</a>
                     </li>

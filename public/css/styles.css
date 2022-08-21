@@ -3,5 +3,21 @@
 } */
 
 .fT-Resp{
-    font-size : max(1vw, 12px)
+    font-size: calc(13px + 0.15vw);
+}
+
+h1{
+    font-size: calc(25px + 0.15vw);
+}
+
+h2{
+    font-size: calc(20px + 0.15vw);
+}
+
+h3{
+    font-size: calc(18px + 0.15vw);
+}
+
+h4{
+    font-size: calc(16px + 0.15vw);
 }
