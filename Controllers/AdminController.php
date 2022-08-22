@@ -241,7 +241,7 @@ class AdminController extends Controller
     /* 
         -------------------------------------------------------- DEPLACER LES ANNONCES D'UNE CATEGORIE --------------------------------------------------------
     */
-    public function deplacerAnnonces(int $id)
+    public function deplacerDesAnnonces(int $id)
     {
         if ($this->isAdmin()) {
 
@@ -271,13 +271,56 @@ class AdminController extends Controller
                     $_SESSION['success'] = "Les articles ont bien été déplacés";
                     header('Location: /admin/annonces');
                     exit;
+                } else {
+                    $_SESSION['erreur'] = !empty($_POST) ? 'Vous devez choisir une catégorie avant de valider' : '';
                 }
             } else {
                 $_SESSION['erreur'] = 'Il n\'y a pas d\'annonces dans cette catégorie';
             }
 
             // Sans compact(): $this->render('annonces/index', ['annonces' => $annonces]);
-            $this->render('admin/deplacerAnnonces', compact('categories_cible', 'annonces_categorie', 'categorie'), 'admin');
+            $this->render('admin/deplacerDesAnnonces', compact('categories_cible', 'annonces_categorie', 'categorie'), 'admin');
+        }
+    }
+    /* 
+        -------------------------------------------------------- DEPLACER UNE ANNONCE --------------------------------------------------------
+    */
+    public function deplacerUneAnnonce(int $id)
+    {
+        if ($this->isAdmin()) {
+
+            // Récupère les annonces de la catégorie
+            $annoncesModel = new AnnoncesModel;
+            $annonce = $annoncesModel->find($id);
+
+            // Catégories cible pour les annonces à déplacer
+            $categoriesModel = new CategoriesModel;
+            $categories_cible = $categoriesModel->findLeaf_tree();
+            $categorie = $categoriesModel->find($annonce->categories_id);
+
+
+
+
+            if (Form::validate($_POST, ['categories'])) {
+
+                $id_cat_cible = intval($_POST['categories']);
+
+                $annoncesModif = new AnnoncesModel;
+
+                $annoncesModif->setId($annonce->id)
+                    ->setCategories_id($id_cat_cible);
+                $annoncesModif->update();
+
+
+                $_SESSION['success'] = "L'article a bien été déplacé";
+                header('Location: /admin/annonces');
+                exit;
+            } else {
+                $_SESSION['erreur'] = !empty($_POST) ? 'Vous devez choisir une catégorie avant de valider' : '';
+            }
+
+            // Sans compact(): $this->render('annonces/index', ['annonces' => $annonces]);
+            $this->render('admin/deplacerUneAnnonce', compact('categories_cible', 'annonce', 'categorie'), 'admin');
         }
     }
 
