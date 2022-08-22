@@ -28,7 +28,7 @@
     <button class="btn btn-primary my-4" type="submit" name="validateSubCat">Ajouter</button>
 </form>
 
-<p class="text-center bg-info text-white border-info py-2 mt-5">Les catégories en rouge contiennent des articles, vous devrez les déplacer ou les supprimer avant de pouvoir créer une nouvelle catégorie</p>
+<p class="text-center bg-info text-white border-info py-2 mt-5">Les catégories en rouge contiennent des articles, vous devrez les déplacer ou les supprimer avant de pouvoir ajouter une nouvelle sous-catégorie</p>
 
 <?php foreach ($sub_categories as $sc) : ?>
 
