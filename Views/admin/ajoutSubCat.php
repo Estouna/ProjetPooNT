@@ -16,7 +16,7 @@
     </div>
 <?php endif; ?>
 <!-- 
-    -------------------------------------------------------- FORMULAIRE AJOUT D'UNE CATEGORIE RACINE ET DE SA SOUS-CATEGORIE-------------------------------------------------------- 
+    -------------------------------------------------------- FORMULAIRE AJOUT D'UNE SOUS-CATEGORIE -------------------------------------------------------- 
 -->
 <form method="post" action="#" class="my-5">
 
@@ -28,7 +28,13 @@
     <button class="btn btn-primary my-4" type="submit" name="validateSubCat">Ajouter</button>
 </form>
 
+<!-- 
+    -------------------------------------------------------- LISTE DES SOUS-CATEGORIE DE LA CATEGORIE SELECTIONNEE-------------------------------------------------------- 
+-->
+<?php if (!empty($sub_categories)) : ?>
+<h2 class="text-primary text-center border-top border-primary py-3 my-5">Sous-catégories de <?= $categories->name ?></h2>
 <p class="text-center bg-info text-white border-info py-2 mt-5">Les catégories en rouge contiennent des articles, vous devrez les déplacer ou les supprimer avant de pouvoir ajouter une nouvelle sous-catégorie</p>
+<?php endif; ?>
 
 <?php foreach ($sub_categories as $sc) : ?>
 

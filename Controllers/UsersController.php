@@ -197,8 +197,9 @@ class UsersController extends Controller
         if ($this->isUser()) {
             $categoriesModel = new CategoriesModel;
             $categories = $categoriesModel->findLeaf_tree();
+            $categoriesRacine = $categoriesModel->findBy(['parent_id' => 0]);
 
-            $this->render('users/profil', compact('categories'));
+            $this->render('users/profil', compact('categories', 'categoriesRacine'));
         }
     }
 

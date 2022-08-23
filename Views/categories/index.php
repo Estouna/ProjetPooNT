@@ -30,3 +30,8 @@
 
     <?php endforeach; ?>
 </div>
+
+    <!-- BOUTON LISTE ANNONCES-->
+    <div class="text-center mt-5">
+        <a href="/categories/planCategories" class="btn btn-primary">Plan de l'arbre des catégories</a>
+    </div>
