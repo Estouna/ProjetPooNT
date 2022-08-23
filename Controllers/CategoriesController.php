@@ -17,11 +17,11 @@ class CategoriesController extends Controller
 
         // Sélection des annonces actives
         $categories = $categoriesModel->findBy(['parent_id' => 0]);
-        
-        
+
+
         $subCat = $categoriesModel->findAll();
-        
-        
+
+
 
         // Sans compact(): $this->render('annonces/index', ['annonces' => $annonces]);
         $this->render('categories/index', compact('categories', 'subCat'));
@@ -56,5 +56,23 @@ class CategoriesController extends Controller
         $annonces = $annoncesModel->findBy(['actif' => 1, 'categories_id' => $id_category]);
 
         $this->render('categories/annonces', compact('annonces'));
+    }
+
+    /* 
+        -------------------------------------------------------- ANNONCES DE L'UTILSATEUR --------------------------------------------------------
+    */
+
+    public function planCategories()
+    {
+        $categoriesModel = new CategoriesModel;
+
+        $categories_racine = $categoriesModel->findBy(['level' => 0]);
+        $sub_categoriesLv1 = $categoriesModel->findBy(['level' => 1]);
+        $sub_categoriesLv2 = $categoriesModel->findBy(['level' => 2]);
+        $sub_categoriesLv3 = $categoriesModel->findBy(['level' => 3]);
+        $sub_categoriesLv4 = $categoriesModel->findBy(['level' => 4]);
+        $sub_categoriesLv5 = $categoriesModel->findBy(['level' => 5]);
+
+        $this->render('categories/planCategories', compact('categories_racine', 'sub_categoriesLv1', 'sub_categoriesLv2', 'sub_categoriesLv3', 'sub_categoriesLv4', 'sub_categoriesLv5'), 'plan');
     }
 }
