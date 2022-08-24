@@ -21,7 +21,7 @@
 <?php endif; ?>
 
 <h2 class="text-primary text-center py-3 my-5">Déplacer tous les articles d'une catégorie :</h2>
-<p class="text-center bg-info text-white border-info py-2 mt-5">Choisissez la catégorie qui contient les articles que vous souhaitez déplacer :</p>
+<p class="text-center bg-info text-white border-info py-2 px-1 mt-5">Choisissez la catégorie qui contient les articles que vous souhaitez déplacer :</p>
 
 <div class="row justify-content-center p-1">
     <?php foreach ($categories_origin as $category) : ?>
@@ -57,7 +57,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="py-5" colspan="5">
+                    <td class="py-2" colspan="5">
                         <div class="text-center">
                             <a href="/annonces/modifier/<?= $annonce->id ?>" class="btn btn-warning fT-Resp m-1 col-lg-2 col-md-3 col-sm-3">Modifier</a>
                             <a href="/admin/deplacerUneAnnonce/<?= $annonce->id ?>" class="btn btn-warning fT-Resp m-1 col-lg-2 col-md-3 col-sm-3">Déplacer dans</a>
