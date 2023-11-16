@@ -63,6 +63,18 @@ class CategoriesModel extends Model
     */
     public function findLft_newCatRacine()
     {
+        /*
+            XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+            return $this->requete("SELECT MAX(rght + 1) AS lft_catRac FROM {$this->table}")->fetch();
+
+            Modifier toutes les requêtes de cette manière et ensuite "$lft_cat->lft_catRac" pour la récupérer.
+            Si cela fonctionne mais erreur soulignée (écrase le model) laisser fetchAll et récupérer comme ceci "$lft_cat[]->lft_catRac" il n'y aura plus d'erreur.
+            Pour virer
+            $it =  new RecursiveIteratorIterator(new RecursiveArrayIterator($rght_desc));
+            $lft_cat = iterator_to_array($it, false);
+            return $lft_cat;
+            XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        */
         $rght_desc = $this->requete("SELECT MAX(rght + 1) FROM {$this->table}")->fetch();
         $it =  new RecursiveIteratorIterator(new RecursiveArrayIterator($rght_desc));
         $lft_cat = iterator_to_array($it, false);

@@ -36,12 +36,12 @@ class UsersController extends Controller
                 }
 
                 // S'il existe hydrate l'objet
-                $user = $userModel->hydrate($userArray);
+                $userModel->hydrate($userArray);
 
                 // Vérifie le mot de passe
-                if (password_verify($_POST['password'], $user->getPassword())) {
+                if (password_verify($_POST['password'], $userModel->getPassword())) {
                     // Si bon mot de passe, création la session
-                    $user->setSession();
+                    $userModel->setSession();
 
                     // Si admin redirige vers admin
                     if (isset($_SESSION['user']['roles']) && in_array('ROLE_ADMIN', $_SESSION['user']['roles'])) {
@@ -179,7 +179,7 @@ class UsersController extends Controller
     */
 
     /**
-     * Déconnexion des utilisateurs
+     * Déconnexion de l'utilisateur
      * @return exit
      */
     public function logout()

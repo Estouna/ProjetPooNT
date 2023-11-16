@@ -11,7 +11,7 @@
 <?php endforeach; ?>
 </div>
 
-<p class="text-center bg-info text-white border-info py-2 mt-5">Choisissez la catégorie où vous souhaitez déplacer vos articles :</p>
+<p class="text-center bg-info text-white border-info py-2 mt-5">Choisissez la catégorie où vous souhaitez déplacer vos annonces (les annonces inactives sont aussi affichées):</p>
 
 <!-- 
     -------------------------------------------------------- CATEGORIES CIBLES -------------------------------------------------------- 
