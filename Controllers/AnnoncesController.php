@@ -168,7 +168,7 @@ class AnnoncesController extends Controller
                     ->setDescription($description);
 
                 // Mise à jour de l'annonce dans la bdd
-                $annonceModif->update();
+                $annonceModif->update($id);
 
                 // Si admin redirige vers liste des annonces admin
                 if (isset($_SESSION['user']['roles']) && in_array('ROLE_ADMIN', $_SESSION['user']['roles'])) {
@@ -193,7 +193,8 @@ class AnnoncesController extends Controller
                 ->ajoutInput('text', 'titre', ['class' => 'form-control', 'value' => $annonce->titre])
                 ->ajoutLabelFor('description', 'Description')
                 ->ajoutTextarea('description', $annonce->description, ['class' => 'form-control'])
-                ->ajoutBouton('Modifier', ['type' => 'submit', 'name' => 'validateModif', 'class' => 'btn btn-primary']);
+                ->ajoutBouton('Modifier', ['type' => 'submit', 'name' => 'validateModif', 'class' => 'btn btn-primary'])
+                ->finForm();
 
             // Envoi à la vue
             $this->render('annonces/modifier', ['modifForm' => $form->create()]);

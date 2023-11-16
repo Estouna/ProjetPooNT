@@ -12,7 +12,6 @@ class CategoriesController extends Controller
     */
     public function index()
     {
-        // Instancie le modèle correspondant à la table annonces
         $categoriesModel = new CategoriesModel;
 
         // Sélection des annonces actives

@@ -1,6 +1,6 @@
 <h1 class="text-primary text-center my-5">Mon profil</h1>
 
-<h2 class="text-center mt-5">Publier une article dans :</h2>
+<h2 class="text-center mt-5">Publier un article dans :</h2>
 
 <!-- 
     -------------------------------------------------------- LISTE DES CATEGORIES EN BOUT D'ARBRE -------------------------------------------------------- 

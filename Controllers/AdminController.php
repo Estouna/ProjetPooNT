@@ -233,7 +233,7 @@ class AdminController extends Controller
                 //     $annonce->setActif(1);
                 // }
 
-                $annonce->update();
+                $annonce->update($id);
             }
         }
     }
@@ -247,26 +247,28 @@ class AdminController extends Controller
 
             // Récupère les annonces de la catégorie
             $annoncesModel = new AnnoncesModel;
+            // Annonces à déplacer
             $annonces_categorie = $annoncesModel->findby(['categories_id' => $id]);
 
             // Catégories cible pour les annonces à déplacer
             $categoriesModel = new CategoriesModel;
+            // Pour afficher toutes les catégories cibles (au bout de l'arbre)
             $categories_cible = $categoriesModel->findLeaf_tree();
+            // La catégorie où se trouve les annonces à déplacer
             $categorie =  $categoriesModel->find($id);
 
 
             if (!empty($annonces_categorie)) {
 
                 if (Form::validate($_POST, ['categories'])) {
-
+                    // Récupère l'id de la catégorie choisie
                     $id_cat_cible = intval($_POST['categories']);
 
                     $annoncesModif = new AnnoncesModel;
                     foreach ($annonces_categorie as $ac) {
-                        $annoncesModif->setId($ac->id)
-                            ->setCategories_id($id_cat_cible);
-                        $annoncesModif->update();
+                        $annoncesModif->setCategories_id($id_cat_cible);
                     }
+                    $annoncesModif->updateAnnoncesCategoryId($id);
 
                     $_SESSION['success'] = "Les articles ont bien été déplacés";
                     header('Location: /admin/annonces');
@@ -293,8 +295,9 @@ class AdminController extends Controller
             $annoncesModel = new AnnoncesModel;
             $annonce = $annoncesModel->find($id);
 
-            // Catégories cible pour les annonces à déplacer
+            // Catégories cible pour l'annonce à déplacer
             $categoriesModel = new CategoriesModel;
+            // Pour afficher toutes les catégories cibles (au bout de l'arbre)
             $categories_cible = $categoriesModel->findLeaf_tree();
             $categorie = $categoriesModel->find($annonce->categories_id);
 
@@ -309,7 +312,7 @@ class AdminController extends Controller
 
                 $annoncesModif->setId($annonce->id)
                     ->setCategories_id($id_cat_cible);
-                $annoncesModif->update();
+                $annoncesModif->update($id);
 
 
                 $_SESSION['success'] = "L'article a bien été déplacé";

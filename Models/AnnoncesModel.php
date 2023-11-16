@@ -49,11 +49,25 @@ class AnnoncesModel extends Model
         return $this->requete("SELECT * FROM {$this->table} WHERE categories_id = $category_id")->fetchAll();
     }
 
-    public function updateCategoriesId()
+    public function updateAnnoncesCategoryId(int $cat_id)
     {
-        return $this->requete("UPDATE {$this->table} SET categories_id WHERE id = ?");
-    }
+        $champs = [];
+        $valeurs = [];
 
+        // Boucle pour éclater le tableau
+        foreach ($this as $champ => $valeur) {
+            if ($valeur !== null && $champ != 'db' && $champ != 'table') {
+                $champs[] = "$champ = ?";
+                $valeurs[] = $valeur;
+            }
+        }
+        $valeurs[] = $cat_id;
+
+        // Transforme le tableau champs en une chaîne de caractères
+        $liste_champs = implode(', ', $champs);
+
+        return $this->requete('UPDATE ' . $this->table . ' SET ' . $liste_champs . ' WHERE categories_id = ?', $valeurs);
+    }
     /* 
         -------------------------------------------------------- GETTERS/SETTERS --------------------------------------------------------
     */
